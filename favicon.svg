@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Maximus">
+  <rect width="64" height="64" rx="12" fill="#502E91" />
+  <path
+    d="M14 46V18h7.6l10.4 16.2L42.4 18H50v28h-7.4V31.4L33 45.2h-2L21.4 31.4V46H14z"
+    fill="#ffffff"
+  />
+</svg>
