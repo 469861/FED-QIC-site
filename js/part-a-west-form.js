@@ -27,6 +27,7 @@ const backBtn = document.getElementById('sf-back');
 const nextBtn = document.getElementById('sf-next');
 const cancelBtn = document.getElementById('sf-cancel');
 const cancelModal = document.getElementById('sf-cancel-modal');
+const uploadLimitModal = document.getElementById('sf-upload-limit-modal');
 const reviewEl = document.getElementById('sf-review');
 const confirmation = document.getElementById('sf-confirmation');
 const uploadInput = document.getElementById('sf-upload-input');
@@ -85,70 +86,6 @@ function midSentence(label) {
   return /^([A-Z]{2}|Medicare\b)/.test(label) ? label : label.charAt(0).toLowerCase() + label.slice(1);
 }
 
-/* ---------- Dates ---------- */
-
-function parseDate(str) {
-  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(str);
-  if (!m) return null;
-  const [, mm, dd, yyyy] = m.map(Number);
-  const d = new Date(yyyy, mm - 1, dd);
-  return d.getFullYear() === yyyy && d.getMonth() === mm - 1 && d.getDate() === dd ? d : null;
-}
-
-function today() {
-  const d = new Date();
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
-
-const pad = (n) => String(n).padStart(2, '0');
-const toIso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-
-function fromIso(iso) {
-  const [y, m, d] = iso.split('-');
-  return y && m && d ? `${m}/${d}/${y}` : '';
-}
-
-/*
- * The DS has no date picker. Each DS text field marked data-date-picker is paired
- * with a visually hidden native <input type="date">; clicking the text field (or
- * Alt+ArrowDown) opens the browser's calendar, and picked dates are written back
- * to the DS field as MM/DD/YYYY. Typed dates are mirrored to the native input so
- * the calendar opens on the right month.
- */
-function initDatePickers() {
-  form.querySelectorAll('[data-date-picker]').forEach((field) => {
-    const native = document.getElementById(field.dataset.datePicker);
-    native.min = toIso(today());
-
-    const open = () => {
-      const d = parseDate(getValue(field.dataset.field));
-      native.value = d ? toIso(d) : '';
-      try {
-        native.showPicker();
-      } catch {
-        // Browsers without showPicker() fall back to typing MM/DD/YYYY.
-      }
-    };
-
-    field.addEventListener('click', open);
-    field.addEventListener('keydown', (e) => {
-      if (e.altKey && e.key === 'ArrowDown') {
-        e.preventDefault();
-        open();
-      }
-    });
-
-    native.addEventListener('change', (e) => {
-      e.stopPropagation();
-      if (!native.value) return;
-      field.value = fromIso(native.value);
-      if (field.error) setError(field, validateField(field));
-      const input = field.shadowRoot?.querySelector('input');
-      input?.focus();
-    });
-  });
-}
-
 /* ---------- Conditional fields ---------- */
 
 function updateConditionals() {
@@ -188,12 +125,6 @@ function validateField(el) {
     case 'zip':
     case 'providerZip':
       return /^\d{5}(-\d{4})?$/.test(value) ? '' : 'Enter a 5-digit ZIP code, or ZIP+4';
-    case 'dueDate': {
-      const d = parseDate(value);
-      if (!d) return 'Enter a real date in the format MM/DD/YYYY';
-      if (d < today()) return 'Due date must be today or later';
-      return '';
-    }
     default:
       return '';
   }
@@ -221,8 +152,11 @@ function showErrorSummary(errors) {
 
 /* ---------- Document uploads ---------- */
 
-function renderUploads(status = '') {
+function renderUploads(status = '', isError = false) {
   uploadCount.textContent = `${uploadedFiles.length} of ${uploadLimit} documents selected`;
+  uploadStatus.classList.toggle('is-error', isError);
+  uploadStatus.setAttribute('role', isError ? 'alert' : 'status');
+  uploadStatus.setAttribute('aria-live', isError ? 'assertive' : 'polite');
   uploadList.replaceChildren();
 
   uploadedFiles.forEach((file, index) => {
@@ -251,6 +185,10 @@ function renderUploads(status = '') {
 }
 
 function addUploads(files) {
+  if (uploadedFiles.length >= uploadLimit) {
+    uploadLimitModal.open = true;
+    return;
+  }
   const all = [...files];
   const incoming = all.filter((f) => uploadTypes.includes(f.name.split('.').pop().toLowerCase()) && f.size <= uploadMaxBytes);
   const rejected = all.length - incoming.length;
@@ -258,20 +196,28 @@ function addUploads(files) {
   const accepted = incoming.slice(0, remaining);
   uploadedFiles.push(...accepted);
 
-  let status = '';
-  if (incoming.length > accepted.length) {
-    status = remaining
-      ? `Added ${accepted.length} document${accepted.length === 1 ? '' : 's'}. The limit is 10; ${incoming.length - accepted.length} not added.`
-      : 'The 10-document limit has been reached. Remove a document before adding another.';
+  const overLimit = incoming.length > accepted.length;
+  const messages = [];
+  if (overLimit) {
+    const notAdded = incoming.length - accepted.length;
+    messages.push(`Error: You can upload a maximum of 10 documents. ${notAdded} additional document${notAdded === 1 ? ' was' : 's were'} not added.`);
   } else if (accepted.length) {
-    status = `Added ${accepted.length} document${accepted.length === 1 ? '' : 's'}.`;
+    messages.push(`Added ${accepted.length} document${accepted.length === 1 ? '' : 's'}.`);
   }
-  if (rejected) status = `${status} ${rejected} file${rejected === 1 ? ' was' : 's were'} not added: unsupported type or larger than 25mb.`.trim();
-  renderUploads(status);
+  if (rejected) messages.push(`${rejected} file${rejected === 1 ? ' was' : 's were'} not added: unsupported type or larger than 25mb.`);
+  renderUploads(messages.join(' '), overLimit || rejected > 0);
 }
 
 function initUploader() {
-  uploadBrowse.addEventListener('click', () => uploadInput.click());
+  uploadBrowse.addEventListener('click', () => {
+    if (uploadedFiles.length >= uploadLimit) {
+      uploadLimitModal.open = true;
+      return;
+    }
+    uploadInput.click();
+  });
+  uploadLimitModal.addEventListener('primary-click', () => { uploadLimitModal.open = false; });
+  uploadLimitModal.addEventListener('close', () => { uploadLimitModal.open = false; });
   uploadInput.addEventListener('change', () => {
     addUploads(uploadInput.files);
     uploadInput.value = '';
@@ -296,6 +242,7 @@ function initUploader() {
 /* ---------- Review ---------- */
 
 function reviewSections() {
+  const hasRepresentative = getValue('hasRepresentative') === 'yes';
   return [
     {
       step: 0, title: 'Beneficiary',
@@ -313,14 +260,15 @@ function reviewSections() {
       ],
     },
     {
-      step: 1, title: 'Representative',
+      step: 0, title: 'Representative',
       rows: [
-        ['Name', `${getValue('callerFirstName')} ${getValue('callerLastName')}`],
-        ['Phone number', getValue('callerPhone')],
+        ['Do you have a representative?', hasRepresentative ? 'Yes' : 'No'],
+        hasRepresentative && ['Name', `${getValue('callerFirstName')} ${getValue('callerLastName')}`],
+        hasRepresentative && ['Phone number', getValue('callerPhone')],
       ],
     },
     {
-      step: 2, title: 'Provider',
+      step: 0, title: 'Provider',
       rows: [
         ['Organization', getValue('providerOrg')],
         ['Address', {
@@ -334,14 +282,7 @@ function reviewSections() {
       ],
     },
     {
-      step: 3, title: 'Additional information',
-      rows: [
-        ['Submitting additional information', { yes: 'Yes', no: 'No' }[getValue('submittingInfo')]],
-        getValue('submittingInfo') === 'yes' && ['Due date', getValue('dueDate')],
-      ],
-    },
-    {
-      step: 4, title: 'Upload documents',
+      step: 1, title: 'Upload documents',
       rows: [['Selected documents', uploadedFiles.map((file) => file.name).join('\n')]],
     },
   ];
@@ -461,14 +402,20 @@ function submit() {
     return;
   }
   const d = new Date();
-  const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-  const number = `PAW-${stamp}-${String(Math.floor(Math.random() * 1e6)).padStart(6, '0')}`;
+  const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   document.getElementById('sf-confirmation-number').textContent = number;
+  const mbi = getValue('mbi');
+  const lastFive = mbi.slice(-5);
+  const first = getValue('firstName');
+  const name = `${first ? `${first.charAt(0).toUpperCase()}. ` : ''}${getValue('lastName').toUpperCase()}`.trim();
+  document.getElementById('sf-confirmation-beneficiary').textContent = `${name} , MBI ***${lastFive}`;
   const submittedEl = document.getElementById('sf-confirmation-submitted');
   submittedEl.dateTime = d.toISOString();
-  submittedEl.textContent = d.toLocaleString('en-US', {
-    month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
-  });
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
+    timeZone: 'America/New_York', timeZoneName: 'short',
+  }).formatToParts(d).map((p) => [p.type, p.value]));
+  submittedEl.textContent = `${parts.weekday} ${parts.month} ${parts.day}, ${parts.year} at time ${parts.hour}:${parts.minute} ${parts.dayPeriod} ${parts.timeZoneName.replace(/^E[SD]T$/, 'ET')}`;
 
   furthest = steps.length;
   current = steps.length;
@@ -484,14 +431,13 @@ function submit() {
 /* ---------- Init ---------- */
 
 async function init() {
-  await Promise.all(['mms-stepper', 'mms-select', 'mms-inline-alert', 'mms-button', 'mms-modal']
+  await Promise.all(['mms-stepper', 'mms-select', 'mms-radio-group', 'mms-radio', 'mms-inline-alert', 'mms-button', 'mms-modal']
     .map((tag) => customElements.whenDefined(tag)));
 
   root.querySelectorAll('mms-inline-alert').forEach((a) => { a.dismissible = false; });
   const stateOptions = STATES.map(([value, label]) => ({ value, label }));
   fieldEl('state').options = stateOptions;
   fieldEl('providerState').options = stateOptions;
-  initDatePickers();
   initUploader();
 
   form.addEventListener('submit', (e) => e.preventDefault());

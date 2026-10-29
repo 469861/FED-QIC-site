@@ -325,10 +325,24 @@ img { max-width: 100%; }
   margin-bottom: var(--spacing-lg1);
 }
 
+.sf-upload-deadline {
+  display: block;
+  margin-bottom: var(--spacing-xl1);
+}
+
 .sf-fields {
   display: flex;
   flex-direction: column;
   gap: var(--layout-gap-comfortable, var(--spacing-lg1));
+}
+
+.sf-section-heading {
+  margin: var(--spacing-md2) 0 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--text-heading-4-size);
+  line-height: var(--text-heading-4-line-height);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-default);
 }
 
 .sf-row {
@@ -375,30 +389,46 @@ img { max-width: 100%; }
 }
 .sf-uploader__content { min-width: 0; }
 .sf-uploader__dropzone {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-sm2);
-  min-height: 18rem;
-  padding: var(--spacing-lg1);
+  min-height: 16rem;
+  padding: var(--spacing-xl1);
   border: 2px dashed var(--color-primary-9);
-  border-radius: var(--border-radius-lg, 1rem);
+  border-radius: var(--border-radius-md, 0.5rem);
+  background-color: var(--color-surface-default, #fff);
   text-align: center;
-  transition: background-color 150ms ease, border-color 150ms ease;
+  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
 }
 .sf-uploader__dropzone.is-dragover {
   border-color: var(--color-primary-9);
   background-color: var(--color-primary-1, #eef5fb);
+  box-shadow: inset 0 0 0 1px var(--color-primary-9);
 }
 .sf-uploader__prompt,
 .sf-uploader__separator,
 .sf-uploader__count,
 .sf-uploader__note,
 .sf-uploader__status { margin: 0; }
-.sf-uploader__icon { color: var(--color-neutral-11, #6b7280); }
-.sf-uploader__prompt { font-size: var(--text-body-lg-size); line-height: var(--text-body-lg-line-height); }
-.sf-uploader__separator { color: var(--color-text-subtle); }
+.sf-uploader__icon { color: var(--color-primary-9); }
+.sf-uploader__prompt { font-size: var(--text-body-lg-size); line-height: var(--text-body-lg-line-height); font-weight: var(--font-weight-bold); }
+.sf-uploader__separator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md1);
+  width: min(100%, 22rem);
+  color: var(--color-text-subtle);
+}
+.sf-uploader__separator::before,
+.sf-uploader__separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-neutral-6);
+}
 .sf-uploader__supported {
   margin: var(--spacing-sm2) 0 0;
   font-size: var(--text-body-sm-size);
@@ -412,6 +442,7 @@ img { max-width: 100%; }
   font-size: var(--text-body-sm-size);
   line-height: var(--text-body-sm-line-height);
 }
+.sf-uploader__status.is-error { color: var(--color-utility-error-emphasis); }
 .sf-uploader__list {
   display: flex;
   flex-direction: column;
@@ -456,22 +487,8 @@ img { max-width: 100%; }
 
 /* Confirmation */
 .sf-confirmation > * + * { margin-top: var(--spacing-lg1); }
-.sf-confirmation__card { display: block; }
-.sf-confirmation__number {
-  margin: 0 0 var(--spacing-sm2);
-  font-family: var(--font-family-tabular, var(--font-family-body));
-  font-size: var(--text-heading-3-size);
-  line-height: var(--text-heading-3-line-height);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary-9);
-}
-.sf-confirmation__submitted {
-  margin: 0 0 var(--spacing-sm2);
-  font-size: var(--text-body-md-size);
-  line-height: var(--text-body-md-line-height);
-}
-.sf-confirmation__note {
-  margin: 0;
+.sf-confirmation__message p {
+  margin: 0 0 var(--spacing-md2, 16px);
   font-size: var(--text-body-md-size);
   line-height: var(--text-body-md-line-height);
 }
@@ -16153,10 +16170,11 @@ lit-html/directives/if-defined.js:
 
           <mms-inline-alert class="sf-error-summary" id="sf-error-summary" alert-type="error" summary="There is a problem." hidden></mms-inline-alert>
 
-          <!-- Step 1: Beneficiary -->
-          <section class="sf-step" data-step="beneficiary" data-title="Beneficiary" hidden>
+          <!-- Step 1: Beneficiary, representative, and provider -->
+          <section class="sf-step" data-step="request-details" data-title="Request details" hidden>
             <p class="sf-lede">Fields marked with an asterisk (*) are required.</p>
             <div class="sf-fields">
+              <h3 class="sf-section-heading">Beneficiary</h3>
               <mms-text-field data-field="mbi" label="Medicare number" required show-tooltip tooltip-text="The MBI is printed on the front of the red, white, and blue Medicare card. If you don't have the card, the MBI is also shown on Medicare Summary Notices."></mms-text-field>
               <mms-text-field data-field="qioRedeterminationNumber" label="QIO redetermination number" autocomplete="off"></mms-text-field>
               <div class="sf-row">
@@ -16173,13 +16191,13 @@ lit-html/directives/if-defined.js:
               <div class="sf-row">
                 <mms-text-field data-field="phone" label="Phone number" type="tel" mask="phone-number" autocomplete="tel" required></mms-text-field>
               </div>
-            </div>
-          </section>
 
-          <!-- Step 2: Representative -->
-          <section class="sf-step" data-step="representative" data-title="Representative" hidden>
-            <p class="sf-lede">Tell us about the representative for this request. Fields marked with an asterisk (*) are required.</p>
-            <div class="sf-fields">
+              <h3 class="sf-section-heading">Representative</h3>
+              <mms-radio-group data-field="hasRepresentative" label="Do you have a representative?" orientation="horizontal" required>
+                <mms-radio value="yes" label="Yes"></mms-radio>
+                <mms-radio value="no" label="No"></mms-radio>
+              </mms-radio-group>
+              <div class="sf-fields" data-show-when="hasRepresentative=yes" hidden>
               <div class="sf-row">
                 <mms-text-field data-field="callerFirstName" label="First name" autocomplete="given-name" required></mms-text-field>
                 <mms-text-field data-field="callerLastName" label="Last name" autocomplete="family-name" required></mms-text-field>
@@ -16187,14 +16205,10 @@ lit-html/directives/if-defined.js:
               <div class="sf-row">
                 <mms-text-field data-field="callerPhone" label="Phone number" type="tel" mask="phone-number" autocomplete="tel" required></mms-text-field>
               </div>
-            </div>
-          </section>
+              </div>
 
-          <!-- Step 3: Provider -->
-          <section class="sf-step" data-step="provider" data-title="Provider" hidden>
-            <p class="sf-lede">Fields marked with an asterisk (*) are required.</p>
-            <div class="sf-fields">
-              <mms-text-field data-field="providerOrg" label="Organization" autocomplete="organization" required></mms-text-field>
+              <h3 class="sf-section-heading">Provider</h3>
+              <mms-text-field data-field="providerOrg" label="Organization" autocomplete="organization" required show-tooltip tooltip-text="Facility name where the beneficiary is receiving the services that are being denied."></mms-text-field>
               <mms-text-field data-field="providerAddress1" label="Address" autocomplete="off"></mms-text-field>
               <mms-text-field data-field="providerAddress2" label="Address line 2" helper-text="Suite, building, floor, etc." autocomplete="off"></mms-text-field>
               <div class="sf-row sf-row--address">
@@ -16212,26 +16226,10 @@ lit-html/directives/if-defined.js:
             </div>
           </section>
 
-          <!-- Step 4: Additional information -->
-          <section class="sf-step" data-step="additional" data-title="Additional information" hidden>
-            <p class="sf-lede">Let us know if you plan to send more information to support this request. Fields marked with an asterisk (*) are required.</p>
-            <div class="sf-fields">
-              <mms-radio-group data-field="submittingInfo" label="Are you submitting additional information?" orientation="horizontal" required>
-                <mms-radio value="yes" label="Yes"></mms-radio>
-                <mms-radio value="no" label="No"></mms-radio>
-              </mms-radio-group>
-              <!-- The DS has no date picker: the DS text field is the visible control, and a visually
-                   hidden native date input supplies the browser's calendar (opened from the text field). -->
-              <div class="sf-date" data-show-when="submittingInfo=yes" hidden>
-                <mms-text-field data-field="dueDate" data-date-picker="dueDatePicker" label="Due date" placeholder="MM/DD/YYYY" helper-text="Pick from the calendar or type MM/DD/YYYY" suffix-icon="calendar-blank" max-length="10" required></mms-text-field>
-                <input class="sf-date__native" id="dueDatePicker" type="date" tabindex="-1" aria-hidden="true" />
-              </div>
-            </div>
-          </section>
-
-          <!-- Step 5: Upload documents -->
+          <!-- Step 2: Upload documents -->
           <section class="sf-step" data-step="uploads" data-title="Upload documents" hidden>
             <p class="sf-lede">Add any supporting documents you want to include. You can select up to 10 documents.</p>
+            <mms-inline-alert class="sf-upload-deadline" alert-type="informational" summary="You have 14 days to submit additional information." message="If you don't have it to upload today, you can fax it to 585-869-3346 or 585-869-3365."></mms-inline-alert>
             <mms-card class="sf-uploader" id="sf-uploader" title-text="Upload document" show-description="false">
               <div class="sf-uploader__content" slot="body-content">
                 <input class="sf-uploader__input" id="sf-upload-input" type="file" accept=".jpg,.jpeg,.png,.tiff,.tif,.pdf,.xlsx,.xls" multiple hidden />
@@ -16250,7 +16248,7 @@ lit-html/directives/if-defined.js:
             </mms-card>
           </section>
 
-          <!-- Step 6: Review and submit -->
+          <!-- Step 3: Review and submit -->
           <section class="sf-step" data-step="review" data-title="Review and submit" hidden>
             <p class="sf-lede">Check your answers before submitting. Select Edit to change a section. Fields marked with an asterisk (*) are required.</p>
             <div class="sf-review" id="sf-review"></div>
@@ -16271,14 +16269,13 @@ lit-html/directives/if-defined.js:
         <!-- Confirmation (prototype: nothing is sent) -->
         <section class="sf-confirmation" id="sf-confirmation" hidden aria-labelledby="sf-confirmation-heading">
           <h2 class="sf-heading" id="sf-confirmation-heading" tabindex="-1">Request submitted</h2>
-          <mms-inline-alert alert-type="success" summary="We received your reconsideration request." message="A decision is typically issued within 60 days of receipt. We will mail the decision to the address you provided."></mms-inline-alert>
-          <mms-card class="sf-confirmation__card" variant="accent-left" title-text="Confirmation number" icon="check-circle">
-            <div slot="body-content">
-              <p class="sf-confirmation__number" id="sf-confirmation-number"></p>
-              <p class="sf-confirmation__submitted">Submitted: <time id="sf-confirmation-submitted"></time></p>
-              <p class="sf-confirmation__note">Keep this number for your records. Include it with any additional information you send.</p>
-            </div>
-          </mms-card>
+          <div class="sf-confirmation__message">
+            <p>Thank you for submitting your appeal for the services provided to <strong id="sf-confirmation-beneficiary"></strong>.</p>
+            <p>Your request was submitted and has been received on <strong><time id="sf-confirmation-submitted"></time></strong>.<br />
+              Your temporary ID, should you need to contact us prior to your mailed Acknowledgment Letter is <strong id="sf-confirmation-number"></strong>.</p>
+            <p>Please note that you are not required to submit a paper copy of this Case File and doing so could delay processing of the appeal.</p>
+            <mms-inline-alert class="sf-confirmation__deadline" alert-type="informational" summary="You have 14 days to submit additional information." message="If you don't have it to upload today, you can fax it to 585-869-3346 or 585-869-3365."></mms-inline-alert>
+          </div>
           <div class="sf-actions">
             <mms-button id="sf-print" variant="secondary" label="Print this page" left-icon="printer"></mms-button>
             <mms-link href="part-a-west.html" label="Return to Part A West" left-icon="arrow-left"></mms-link>
@@ -16286,6 +16283,7 @@ lit-html/directives/if-defined.js:
         </section>
 
         <mms-modal id="sf-cancel-modal" size="md" title-text="Cancel your request?" desc-text="Your answers will not be saved." primary-label="Yes, cancel request" secondary-label="Keep editing" alert-type="destructive"></mms-modal>
+        <mms-modal id="sf-upload-limit-modal" size="md" title-text="Maximum documents uploaded" desc-text="You have already uploaded the maximum of 10 documents. Remove a document if you need to add a different one." primary-label="OK"></mms-modal>
       </div>
     </div>
   </main>
@@ -16345,6 +16343,7 @@ const backBtn = document.getElementById('sf-back');
 const nextBtn = document.getElementById('sf-next');
 const cancelBtn = document.getElementById('sf-cancel');
 const cancelModal = document.getElementById('sf-cancel-modal');
+const uploadLimitModal = document.getElementById('sf-upload-limit-modal');
 const reviewEl = document.getElementById('sf-review');
 const confirmation = document.getElementById('sf-confirmation');
 const uploadInput = document.getElementById('sf-upload-input');
@@ -16403,70 +16402,6 @@ function midSentence(label) {
   return /^([A-Z]{2}|Medicare\b)/.test(label) ? label : label.charAt(0).toLowerCase() + label.slice(1);
 }
 
-/* ---------- Dates ---------- */
-
-function parseDate(str) {
-  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(str);
-  if (!m) return null;
-  const [, mm, dd, yyyy] = m.map(Number);
-  const d = new Date(yyyy, mm - 1, dd);
-  return d.getFullYear() === yyyy && d.getMonth() === mm - 1 && d.getDate() === dd ? d : null;
-}
-
-function today() {
-  const d = new Date();
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
-
-const pad = (n) => String(n).padStart(2, '0');
-const toIso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-
-function fromIso(iso) {
-  const [y, m, d] = iso.split('-');
-  return y && m && d ? `${m}/${d}/${y}` : '';
-}
-
-/*
- * The DS has no date picker. Each DS text field marked data-date-picker is paired
- * with a visually hidden native <input type="date">; clicking the text field (or
- * Alt+ArrowDown) opens the browser's calendar, and picked dates are written back
- * to the DS field as MM/DD/YYYY. Typed dates are mirrored to the native input so
- * the calendar opens on the right month.
- */
-function initDatePickers() {
-  form.querySelectorAll('[data-date-picker]').forEach((field) => {
-    const native = document.getElementById(field.dataset.datePicker);
-    native.min = toIso(today());
-
-    const open = () => {
-      const d = parseDate(getValue(field.dataset.field));
-      native.value = d ? toIso(d) : '';
-      try {
-        native.showPicker();
-      } catch {
-        // Browsers without showPicker() fall back to typing MM/DD/YYYY.
-      }
-    };
-
-    field.addEventListener('click', open);
-    field.addEventListener('keydown', (e) => {
-      if (e.altKey && e.key === 'ArrowDown') {
-        e.preventDefault();
-        open();
-      }
-    });
-
-    native.addEventListener('change', (e) => {
-      e.stopPropagation();
-      if (!native.value) return;
-      field.value = fromIso(native.value);
-      if (field.error) setError(field, validateField(field));
-      const input = field.shadowRoot?.querySelector('input');
-      input?.focus();
-    });
-  });
-}
-
 /* ---------- Conditional fields ---------- */
 
 function updateConditionals() {
@@ -16506,12 +16441,6 @@ function validateField(el) {
     case 'zip':
     case 'providerZip':
       return /^\d{5}(-\d{4})?$/.test(value) ? '' : 'Enter a 5-digit ZIP code, or ZIP+4';
-    case 'dueDate': {
-      const d = parseDate(value);
-      if (!d) return 'Enter a real date in the format MM/DD/YYYY';
-      if (d < today()) return 'Due date must be today or later';
-      return '';
-    }
     default:
       return '';
   }
@@ -16539,8 +16468,11 @@ function showErrorSummary(errors) {
 
 /* ---------- Document uploads ---------- */
 
-function renderUploads(status = '') {
+function renderUploads(status = '', isError = false) {
   uploadCount.textContent = `${uploadedFiles.length} of ${uploadLimit} documents selected`;
+  uploadStatus.classList.toggle('is-error', isError);
+  uploadStatus.setAttribute('role', isError ? 'alert' : 'status');
+  uploadStatus.setAttribute('aria-live', isError ? 'assertive' : 'polite');
   uploadList.replaceChildren();
 
   uploadedFiles.forEach((file, index) => {
@@ -16569,6 +16501,10 @@ function renderUploads(status = '') {
 }
 
 function addUploads(files) {
+  if (uploadedFiles.length >= uploadLimit) {
+    uploadLimitModal.open = true;
+    return;
+  }
   const all = [...files];
   const incoming = all.filter((f) => uploadTypes.includes(f.name.split('.').pop().toLowerCase()) && f.size <= uploadMaxBytes);
   const rejected = all.length - incoming.length;
@@ -16576,20 +16512,28 @@ function addUploads(files) {
   const accepted = incoming.slice(0, remaining);
   uploadedFiles.push(...accepted);
 
-  let status = '';
-  if (incoming.length > accepted.length) {
-    status = remaining
-      ? `Added ${accepted.length} document${accepted.length === 1 ? '' : 's'}. The limit is 10; ${incoming.length - accepted.length} not added.`
-      : 'The 10-document limit has been reached. Remove a document before adding another.';
+  const overLimit = incoming.length > accepted.length;
+  const messages = [];
+  if (overLimit) {
+    const notAdded = incoming.length - accepted.length;
+    messages.push(`Error: You can upload a maximum of 10 documents. ${notAdded} additional document${notAdded === 1 ? ' was' : 's were'} not added.`);
   } else if (accepted.length) {
-    status = `Added ${accepted.length} document${accepted.length === 1 ? '' : 's'}.`;
+    messages.push(`Added ${accepted.length} document${accepted.length === 1 ? '' : 's'}.`);
   }
-  if (rejected) status = `${status} ${rejected} file${rejected === 1 ? ' was' : 's were'} not added: unsupported type or larger than 25mb.`.trim();
-  renderUploads(status);
+  if (rejected) messages.push(`${rejected} file${rejected === 1 ? ' was' : 's were'} not added: unsupported type or larger than 25mb.`);
+  renderUploads(messages.join(' '), overLimit || rejected > 0);
 }
 
 function initUploader() {
-  uploadBrowse.addEventListener('click', () => uploadInput.click());
+  uploadBrowse.addEventListener('click', () => {
+    if (uploadedFiles.length >= uploadLimit) {
+      uploadLimitModal.open = true;
+      return;
+    }
+    uploadInput.click();
+  });
+  uploadLimitModal.addEventListener('primary-click', () => { uploadLimitModal.open = false; });
+  uploadLimitModal.addEventListener('close', () => { uploadLimitModal.open = false; });
   uploadInput.addEventListener('change', () => {
     addUploads(uploadInput.files);
     uploadInput.value = '';
@@ -16614,6 +16558,7 @@ function initUploader() {
 /* ---------- Review ---------- */
 
 function reviewSections() {
+  const hasRepresentative = getValue('hasRepresentative') === 'yes';
   return [
     {
       step: 0, title: 'Beneficiary',
@@ -16631,14 +16576,15 @@ function reviewSections() {
       ],
     },
     {
-      step: 1, title: 'Representative',
+      step: 0, title: 'Representative',
       rows: [
-        ['Name', `${getValue('callerFirstName')} ${getValue('callerLastName')}`],
-        ['Phone number', getValue('callerPhone')],
+        ['Do you have a representative?', hasRepresentative ? 'Yes' : 'No'],
+        hasRepresentative && ['Name', `${getValue('callerFirstName')} ${getValue('callerLastName')}`],
+        hasRepresentative && ['Phone number', getValue('callerPhone')],
       ],
     },
     {
-      step: 2, title: 'Provider',
+      step: 0, title: 'Provider',
       rows: [
         ['Organization', getValue('providerOrg')],
         ['Address', {
@@ -16652,14 +16598,7 @@ function reviewSections() {
       ],
     },
     {
-      step: 3, title: 'Additional information',
-      rows: [
-        ['Submitting additional information', { yes: 'Yes', no: 'No' }[getValue('submittingInfo')]],
-        getValue('submittingInfo') === 'yes' && ['Due date', getValue('dueDate')],
-      ],
-    },
-    {
-      step: 4, title: 'Upload documents',
+      step: 1, title: 'Upload documents',
       rows: [['Selected documents', uploadedFiles.map((file) => file.name).join('\n')]],
     },
   ];
@@ -16779,14 +16718,20 @@ function submit() {
     return;
   }
   const d = new Date();
-  const stamp = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-  const number = `PAW-${stamp}-${String(Math.floor(Math.random() * 1e6)).padStart(6, '0')}`;
+  const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   document.getElementById('sf-confirmation-number').textContent = number;
+  const mbi = getValue('mbi');
+  const lastFive = mbi.slice(-5);
+  const first = getValue('firstName');
+  const name = `${first ? `${first.charAt(0).toUpperCase()}. ` : ''}${getValue('lastName').toUpperCase()}`.trim();
+  document.getElementById('sf-confirmation-beneficiary').textContent = `${name} , MBI ***${lastFive}`;
   const submittedEl = document.getElementById('sf-confirmation-submitted');
   submittedEl.dateTime = d.toISOString();
-  submittedEl.textContent = d.toLocaleString('en-US', {
-    month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
-  });
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
+    timeZone: 'America/New_York', timeZoneName: 'short',
+  }).formatToParts(d).map((p) => [p.type, p.value]));
+  submittedEl.textContent = `${parts.weekday} ${parts.month} ${parts.day}, ${parts.year} at time ${parts.hour}:${parts.minute} ${parts.dayPeriod} ${parts.timeZoneName.replace(/^E[SD]T$/, 'ET')}`;
 
   furthest = steps.length;
   current = steps.length;
@@ -16802,14 +16747,13 @@ function submit() {
 /* ---------- Init ---------- */
 
 async function init() {
-  await Promise.all(['mms-stepper', 'mms-select', 'mms-inline-alert', 'mms-button', 'mms-modal']
+  await Promise.all(['mms-stepper', 'mms-select', 'mms-radio-group', 'mms-radio', 'mms-inline-alert', 'mms-button', 'mms-modal']
     .map((tag) => customElements.whenDefined(tag)));
 
   root.querySelectorAll('mms-inline-alert').forEach((a) => { a.dismissible = false; });
   const stateOptions = STATES.map(([value, label]) => ({ value, label }));
   fieldEl('state').options = stateOptions;
   fieldEl('providerState').options = stateOptions;
-  initDatePickers();
   initUploader();
 
   form.addEventListener('submit', (e) => e.preventDefault());
