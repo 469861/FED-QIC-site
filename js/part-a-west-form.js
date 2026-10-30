@@ -42,7 +42,7 @@ let furthest = 0;
 let uploadedFiles = [];
 const uploadLimit = 10;
 const uploadMaxBytes = 25 * 1024 * 1024;
-const uploadTypes = ['jpg', 'jpeg', 'png', 'tiff', 'tif', 'pdf', 'xlsx', 'xls'];
+const uploadTypes = ['pdf'];
 
 /* ---------- Field helpers ---------- */
 
@@ -112,7 +112,7 @@ function validateField(el) {
   if (el.hasAttribute('required') && !value) {
     if (el.tagName === 'MMS-RADIO-GROUP') return `Select an answer for "${label}"`;
     if (el.tagName === 'MMS-SELECT') return `Select ${midSentence(label)}`;
-    if (el.tagName === 'MMS-CHECKBOX') return 'You must certify this statement to submit your request';
+    if (el.tagName === 'MMS-CHECKBOX') return 'You must check this box to submit your request';
     return `Enter ${midSentence(label)}`;
   }
   if (!value) return '';
@@ -124,7 +124,7 @@ function validateField(el) {
       return value.replace(/\D/g, '').length === 10 ? '' : 'Enter a 10-digit phone number';
     case 'zip':
     case 'providerZip':
-      return /^\d{5}(-\d{4})?$/.test(value) ? '' : 'Enter a 5-digit ZIP code, or ZIP+4';
+      return /^\d{5}(-\d{4})?$/.test(value) ? '' : 'Enter a 5-digit ZIP Code, or ZIP+4';
     default:
       return '';
   }
@@ -200,12 +200,13 @@ function addUploads(files) {
   const messages = [];
   if (overLimit) {
     const notAdded = incoming.length - accepted.length;
-    messages.push(`Error: You can upload a maximum of 10 documents. ${notAdded} additional document${notAdded === 1 ? ' was' : 's were'} not added.`);
+    messages.push(`Error: You can upload a maximum of ${uploadLimit} documents. ${notAdded} additional document${notAdded === 1 ? ' was' : 's were'} not added.`);
   } else if (accepted.length) {
     messages.push(`Added ${accepted.length} document${accepted.length === 1 ? '' : 's'}.`);
   }
-  if (rejected) messages.push(`${rejected} file${rejected === 1 ? ' was' : 's were'} not added: unsupported type or larger than 25mb.`);
+  if (rejected) messages.push(`${rejected} file${rejected === 1 ? ' was' : 's were'} not added: only PDF files up to 25mb are accepted.`);
   renderUploads(messages.join(' '), overLimit || rejected > 0);
+  if (overLimit) uploadLimitModal.open = true;
 }
 
 function initUploader() {
@@ -247,8 +248,7 @@ function reviewSections() {
     {
       step: 0, title: 'Beneficiary',
       rows: [
-        ['Medicare number', getValue('mbi')],
-        ['QIO redetermination number', getValue('qioRedeterminationNumber')],
+        ['Medicare Number', getValue('mbi')],
         ['Name', `${getValue('firstName')} ${getValue('lastName')}`],
         ['Address', {
           address: {
@@ -257,20 +257,21 @@ function reviewSections() {
           },
         }],
         ['Phone number', getValue('phone')],
+        ['QIO redetermination number', getValue('qioRedeterminationNumber')],
       ],
     },
     {
-      step: 0, title: 'Representative',
+      step: 0, title: 'Representative information',
       rows: [
-        ['Do you have a representative?', hasRepresentative ? 'Yes' : 'No'],
+        ['Are you a representative filling out this form for the beneficiary?', hasRepresentative ? 'Yes' : 'No'],
         hasRepresentative && ['Name', `${getValue('callerFirstName')} ${getValue('callerLastName')}`],
         hasRepresentative && ['Phone number', getValue('callerPhone')],
       ],
     },
     {
-      step: 0, title: 'Provider',
+      step: 0, title: 'Provider information',
       rows: [
-        ['Organization', getValue('providerOrg')],
+        ['Facility name', getValue('providerOrg')],
         ['Address', {
           address: {
             addressLine1: getValue('providerAddress1'), addressLine2: getValue('providerAddress2'),
@@ -360,7 +361,7 @@ function goTo(index, { focus = true } = {}) {
 
   heading.textContent = steps[index].dataset.title;
   stepCount.textContent = `Step ${index + 1} of ${steps.length}`;
-  document.title = `${steps[index].dataset.title} – Part A West Reconsideration Request | Maximus QIC`;
+  document.title = `${steps[index].dataset.title} – Part A West Expedited Appeal Request Form | Maximus QIC`;
 
   if (steps[index].dataset.step === 'review') renderReview();
   updateConditionals();
@@ -404,31 +405,53 @@ function submit() {
   const d = new Date();
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   document.getElementById('sf-confirmation-number').textContent = number;
-  const mbi = getValue('mbi');
-  const lastFive = mbi.slice(-5);
+  const mbi = getValue('mbi').replace(/[^A-Za-z0-9]/g, '');
+  const lastFour = mbi.slice(-4);
   const first = getValue('firstName');
   const name = `${first ? `${first.charAt(0).toUpperCase()}. ` : ''}${getValue('lastName').toUpperCase()}`.trim();
-  document.getElementById('sf-confirmation-beneficiary').textContent = `${name} , MBI ***${lastFive}`;
+  document.getElementById('sf-confirmation-beneficiary').textContent = `${name}, Medicare number *** ${lastFour}`;
   const submittedEl = document.getElementById('sf-confirmation-submitted');
   submittedEl.dateTime = d.toISOString();
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
     weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
     timeZone: 'America/New_York', timeZoneName: 'short',
   }).formatToParts(d).map((p) => [p.type, p.value]));
-  submittedEl.textContent = `${parts.weekday} ${parts.month} ${parts.day}, ${parts.year} at time ${parts.hour}:${parts.minute} ${parts.dayPeriod} ${parts.timeZoneName.replace(/^E[SD]T$/, 'ET')}`;
+  submittedEl.textContent = `${parts.weekday} ${parts.month} ${parts.day}, ${parts.year} at ${parts.hour}:${parts.minute} ${parts.dayPeriod} ${parts.timeZoneName.replace(/^E[SD]T$/, 'ET')}`;
 
   furthest = steps.length;
   current = steps.length;
   updateStepper();
   form.hidden = true;
   confirmation.hidden = false;
-  document.title = 'Request submitted – Part A West Reconsideration Request | Maximus QIC';
+  document.title = 'Request submitted – Part A West Expedited Appeal Request Form | Maximus QIC';
   const confirmHeading = document.getElementById('sf-confirmation-heading');
   confirmHeading.focus();
   root.scrollIntoView({ block: 'start', behavior: 'smooth' });
 }
 
 /* ---------- Init ---------- */
+
+// mms-tooltip only renders plain text, so italicize a phrase in the rendered tooltip after it mounts.
+async function italicizeTooltipPhrase(field, phrase) {
+  await customElements.whenDefined('mms-tooltip');
+  await field.updateComplete;
+  const tooltip = field.shadowRoot?.querySelector('mms-tooltip');
+  if (!tooltip) return;
+  await tooltip.updateComplete;
+  const content = tooltip.shadowRoot?.querySelector('.tooltip-content');
+  if (!content) return;
+  const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const start = node.data.indexOf(phrase);
+    if (start === -1) continue;
+    const match = node.splitText(start);
+    match.splitText(phrase.length);
+    const em = document.createElement('em');
+    match.replaceWith(em);
+    em.append(match);
+    return;
+  }
+}
 
 async function init() {
   await Promise.all(['mms-stepper', 'mms-select', 'mms-radio-group', 'mms-radio', 'mms-inline-alert', 'mms-button', 'mms-modal']
@@ -439,6 +462,7 @@ async function init() {
   fieldEl('state').options = stateOptions;
   fieldEl('providerState').options = stateOptions;
   initUploader();
+  italicizeTooltipPhrase(fieldEl('mbi'), 'my Social Security');
 
   form.addEventListener('submit', (e) => e.preventDefault());
 

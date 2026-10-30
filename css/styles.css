@@ -120,9 +120,9 @@ img { max-width: 100%; }
 .list, .list ul { list-style: none; padding-left: 40px; margin: 0; }
 .list li { font-size: 24px; padding: 10px 0; }
 .list li.address { white-space: pre-line; }
-.list li::before { content: "•"; color: var(--purple); font-weight: 700; display: inline-block; width: 1em; margin-left: -1em; }
+.list li::before { content: "\2022"; color: var(--purple); font-weight: 700; display: inline-block; width: 1em; margin-left: -1em; }
 
-.sub-heading { font-size: 30px; font-weight: 400; margin-bottom: .5em; line-height: 1.4; }
+.sub-heading { font-size: 30px; font-weight: 700; margin-bottom: .5em; line-height: 1.4; }
 
 .gray-panel { background: var(--gray-bg); padding-bottom: 15px; margin: 20px 0; }
 .gray-panel__heading {
@@ -133,6 +133,8 @@ img { max-width: 100%; }
 .gray-panel .columns { padding: 1em 15px 0; }
 .columns--spaced { margin-top: 40px; }
 .column { flex: 1 1 300px; min-width: 0; }
+.columns--stacked { flex-direction: column; }
+.columns--stacked > .column { flex: 0 0 auto; }
 
 /* Buttons (site's existing "btnBlue" / "btnGreen" styles) */
 .btn {
@@ -152,7 +154,7 @@ img { max-width: 100%; }
   box-shadow: 0 0 0 1px var(--border-light); padding: 28px 32px; margin: 32px 0 40px;
 }
 .cta-section__body { flex: 1 1 420px; min-width: 0; }
-.cta-section__eyebrow { color: var(--purple); font-size: 16px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 8px; }
+.cta-section__eyebrow { color: var(--purple); font-size: 16px; font-weight: 700; margin-bottom: 8px; }
 .cta-section__heading { color: var(--purple); font-size: 30px; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
 .cta-section__text { font-size: 20px; line-height: 1.5; margin: 0; }
 .cta-section__action { flex: 0 0 auto; }
