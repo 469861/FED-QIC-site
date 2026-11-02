@@ -52,11 +52,6 @@
   margin-bottom: var(--spacing-lg1);
 }
 
-.sf-upload-deadline {
-  display: block;
-  margin-bottom: var(--spacing-xl1);
-}
-
 .sf-fields {
   display: flex;
   flex-direction: column;
@@ -114,6 +109,7 @@
 .sf-uploader {
   display: block;
 }
+.sf-upload-followup { margin-top: var(--spacing-xl1); }
 .sf-uploader__content { min-width: 0; }
 .sf-uploader__dropzone {
   position: relative;

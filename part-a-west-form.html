@@ -327,11 +327,6 @@ img { max-width: 100%; }
   margin-bottom: var(--spacing-lg1);
 }
 
-.sf-upload-deadline {
-  display: block;
-  margin-bottom: var(--spacing-xl1);
-}
-
 .sf-fields {
   display: flex;
   flex-direction: column;
@@ -389,6 +384,7 @@ img { max-width: 100%; }
 .sf-uploader {
   display: block;
 }
+.sf-upload-followup { margin-top: var(--spacing-xl1); }
 .sf-uploader__content { min-width: 0; }
 .sf-uploader__dropzone {
   position: relative;
@@ -16231,8 +16227,6 @@ lit-html/directives/if-defined.js:
           <!-- Step 2: Upload documents -->
           <section class="sf-step" data-step="uploads" data-title="Upload documents" hidden>
             <p class="sf-lede">You can upload supporting documents now if you have them. Some examples include additional medical records, personal statements, or Power of Attorney documents for representatives. You can select up to 10 documents.</p>
-            <p class="sf-lede">If you do not have documents to upload now, you can skip this step and send us the information later.</p>
-            <mms-inline-alert class="sf-upload-deadline" alert-type="informational" summary="You have 14 days after you submit this form to fax us your supporting documents." message="Fax them to 585-869-3346 or 585-869-3365."></mms-inline-alert>
             <mms-card class="sf-uploader" id="sf-uploader" title-text="Upload documents" show-description="false">
               <div class="sf-uploader__content" slot="body-content">
                 <input class="sf-uploader__input" id="sf-upload-input" type="file" accept=".pdf,application/pdf" multiple hidden />
@@ -16241,7 +16235,7 @@ lit-html/directives/if-defined.js:
                   <p class="sf-uploader__prompt">Drag and drop files here</p>
                   <p class="sf-uploader__separator">OR</p>
                   <mms-button id="sf-upload-browse" type="button" variant="secondary" label="Click here to upload"></mms-button>
-                  <p class="sf-uploader__supported">Supported: PDF only<br />File size should be maximum 25mb and it shouldn't be password protected</p>
+                  <p class="sf-uploader__supported">Supported: PDF only<br />Maximum file size: 25 MB. Maximum total upload size: 250 MB. Files must not be password protected.</p>
                 </div>
                 <p class="sf-uploader__count" id="sf-upload-count">0 of 10 documents selected</p>
                 <ul class="sf-uploader__list" id="sf-upload-list" aria-label="Selected documents"></ul>
@@ -16249,15 +16243,19 @@ lit-html/directives/if-defined.js:
                 <p class="sf-uploader__status" id="sf-upload-status" role="status" aria-live="polite"></p>
               </div>
             </mms-card>
+            <div class="sf-fields sf-upload-followup">
+              <mms-radio-group data-field="supportingDocsLater" label="Do you have supporting documents that you are unable to upload today?" orientation="horizontal" required>
+                <mms-radio value="yes" label="Yes"></mms-radio>
+                <mms-radio value="no" label="No"></mms-radio>
+              </mms-radio-group>
+              <mms-inline-alert data-show-when="supportingDocsLater=yes" alert-type="informational" summary="We can hold processing your appeal for up to 14 days after you submit, allowing you time to fax supporting documents." message="Fax them to 585-869-3346 or 585-869-3365." hidden></mms-inline-alert>
+            </div>
           </section>
 
           <!-- Step 3: Review and submit -->
           <section class="sf-step" data-step="review" data-title="Review and submit" hidden>
             <p class="sf-lede">Check your answers before submitting. Select Edit to change a section. Fields marked with an asterisk (*) are required.</p>
             <div class="sf-review" id="sf-review"></div>
-            <div class="sf-fields">
-              <mms-checkbox data-field="attest" label="I certify that the information in this request is true and correct to the best of my knowledge." required></mms-checkbox>
-            </div>
           </section>
 
           <div class="sf-actions" id="sf-actions">
@@ -16277,7 +16275,7 @@ lit-html/directives/if-defined.js:
             <p>Your request was received on <strong><time id="sf-confirmation-submitted"></time></strong>.</p>
             <p>Your temporary ID is <strong id="sf-confirmation-number"></strong>. You can reference this if you need to contact us before you receive your Acknowledgment Letter.</p>
             <p>Please note that you are not required to submit a paper copy of this Case File. Doing so could delay processing of the appeal.</p>
-            <mms-inline-alert class="sf-confirmation__deadline" alert-type="informational" summary="You have 14 days after you submit this form to fax us your supporting documents." message="Fax them to 585-869-3346 or 585-869-3365."></mms-inline-alert>
+            <mms-inline-alert id="sf-confirmation-deadline" alert-type="informational" summary="We can hold processing your appeal for up to 14 days after you submit, allowing you time to fax supporting documents." message="Fax them to 585-869-3346 or 585-869-3365." hidden></mms-inline-alert>
           </div>
           <div class="sf-actions">
             <mms-button id="sf-print" variant="secondary" label="Print this page" left-icon="printer"></mms-button>
@@ -16603,7 +16601,10 @@ function reviewSections() {
     },
     {
       step: 1, title: 'Upload documents',
-      rows: [['Selected documents', uploadedFiles.map((file) => file.name).join('\n')]],
+      rows: [
+        ['Do you have supporting documents that you are unable to upload today?', getValue('supportingDocsLater') === 'yes' ? 'Yes' : 'No'],
+        ['Selected documents', uploadedFiles.map((file) => file.name).join('\n')],
+      ],
     },
   ];
 }
@@ -16722,6 +16723,7 @@ function submit() {
     return;
   }
   const d = new Date();
+  document.getElementById('sf-confirmation-deadline').hidden = getValue('supportingDocsLater') !== 'yes';
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   document.getElementById('sf-confirmation-number').textContent = number;
   const mbi = getValue('mbi').replace(/[^A-Za-z0-9]/g, '');
