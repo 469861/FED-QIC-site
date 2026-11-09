@@ -269,7 +269,7 @@ function reviewSections() {
       ],
     },
     {
-      step: 0, title: 'Provider information',
+      step: 0, title: 'Facility information',
       rows: [
         ['Facility name', getValue('providerOrg')],
         ['Address', {
