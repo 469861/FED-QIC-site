@@ -457,6 +457,25 @@ async function italicizeTooltipPhrase(field, phrase) {
   }
 }
 
+// mms-text-field renders the tooltip icon after the whole label, so append "(optional)" after the icon instead.
+async function appendOptionalAfterTooltip(field) {
+  await field.updateComplete;
+  const row = field.shadowRoot?.querySelector('.label-row');
+  if (!row || row.querySelector('.optional-suffix')) return;
+  field.setAttribute('aria-label', `${field.label} (optional)`);
+  const suffix = document.createElement('span');
+  suffix.className = 'optional-suffix';
+  suffix.setAttribute('aria-hidden', 'true');
+  suffix.textContent = '(optional)';
+  row.append(suffix);
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(`.label-row { display: block; }
+    .label-row > * { display: inline-block; vertical-align: middle; }
+    .label-row > :first-child { display: inline; }
+    .label-row > mms-tooltip { margin: 0 var(--spacing-xs2, 4px); }`);
+  field.shadowRoot.adoptedStyleSheets = [...field.shadowRoot.adoptedStyleSheets, sheet];
+}
+
 async function init() {
   await Promise.all(['mms-stepper', 'mms-select', 'mms-radio-group', 'mms-radio', 'mms-inline-alert', 'mms-button', 'mms-modal']
     .map((tag) => customElements.whenDefined(tag)));
@@ -467,6 +486,7 @@ async function init() {
   fieldEl('providerState').options = stateOptions;
   initUploader();
   italicizeTooltipPhrase(fieldEl('mbi'), 'my Social Security');
+  appendOptionalAfterTooltip(fieldEl('qioRedeterminationNumber'));
 
   form.addEventListener('submit', (e) => e.preventDefault());
 
