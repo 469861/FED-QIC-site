@@ -240,10 +240,14 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
 
 /* Part A West accordion */
 .page-accordion { display: block; margin: 32px 0 0; }
+.page-accordion .paragraph, .page-accordion .list li, .page-accordion .sub-heading, .page-accordion .link { font-size: 18px; }
 .page-accordion .paragraph:last-child, .page-accordion .list:last-child { margin-bottom: 0; }
 
 .online-request-hero { display: block; margin: 24px 0 40px; }
 .online-request-hero__link { text-decoration: none; display: inline-block; }
+
+/* Cap page body at the design system content width, matching the footer */
+.page--content { max-width: var(--layout-content-max-width, 1280px); }
 
   </style>
   <style>
