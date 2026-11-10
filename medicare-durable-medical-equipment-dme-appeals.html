@@ -16076,12 +16076,9 @@ lit-html/directives/if-defined.js:
       </div>
     </section>
 
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <ol class="breadcrumb__list">
-        <li class="breadcrumb__item"><a class="breadcrumb__link" href="index.html">Home</a></li>
-        <li class="breadcrumb__item" aria-current="page">Medicare Durable Medical Equipment (DME) Appeals</li>
-      </ol>
-    </nav>
+    <div class="breadcrumb">
+      <mms-breadcrumbs items='[{"label": "Home", "href": "index.html"}, {"label": "Medicare Durable Medical Equipment (DME) Appeals"}]'></mms-breadcrumbs>
+    </div>
 
     <div class="container page page--content">
       <h2 class="page-title">Filing a Medicare DME Appeal</h2>
@@ -16094,28 +16091,28 @@ lit-html/directives/if-defined.js:
         <mms-accordion-item header-text="File an Appeal by Mail or Fax">
           <p class="paragraph">If you prefer not to file online, you may submit a written reconsideration request to Maximus by mail or fax.</p>
           <ol class="list list--ordered">
-            <li>Complete the <a class="link" href="https://www.cms.gov/medicare/cms-forms/cms-forms/downloads/cms20033.pdf" target="_blank" rel="noopener noreferrer">Medicare Reconsideration Request Form<span class="sr-only"> (opens in new tab)</span></a> or prepare a written request that includes your Medicare number, the item or service being appealed, and your contact information.</li>
+            <li>Complete the <mms-link href="https://www.cms.gov/medicare/cms-forms/cms-forms/downloads/cms20033.pdf" label="Medicare Reconsideration Request Form" size="lg" underline="always" target="_blank" aria-label="Medicare Reconsideration Request Form (opens in new tab)"></mms-link> or prepare a written request that includes your Medicare number, the item or service being appealed, and your contact information.</li>
             <li>Sign and date your appeal request. If someone is filing on your behalf, include documentation showing they are authorized to represent you.</li>
             <li>Submit your appeal by mail or fax:
               <p class="paragraph submit-method"><strong>Mail</strong><br />Maximus<br />DME QIC<br />3750 Monroe Ave, Suite 777<br />Pittsford, NY 14534-1302</p>
               <p class="paragraph submit-method"><strong>Fax</strong><br />585-869-3314</p>
             </li>
           </ol>
-          <p class="paragraph">If you have any questions about how to submit your request, refer to this <a class="link" href="https://medicareappeal.com/docs/reconsideration-request-documentation.pdf" target="_blank" rel="noopener noreferrer">helpful guide<span class="sr-only"> (opens in new tab)</span></a>.</p>
+          <p class="paragraph">If you have any questions about how to submit your request, refer to this <mms-link href="https://medicareappeal.com/docs/reconsideration-request-documentation.pdf" label="helpful guide" size="lg" underline="always" target="_blank" aria-label="helpful guide (opens in new tab)"></mms-link>.</p>
         </mms-accordion-item>
         <mms-accordion-item header-text="Request a Duplicate Copy of a Decision Letter">
-          <p class="paragraph">If you’d like to request a copy of a decision letter, please click <a class="link" href="https://medicareappeal.com/part-b/copy-of-decision">Copy of Decision | Medicare Appeals</a> to submit a request. For additional information on this process click <a class="link" href="https://medicareappeal.com/decision-letter-help">Decision Letter Help | Medicare Appeals.</a></p>
+          <p class="paragraph">If you’d like to request a copy of a decision letter, please click <mms-link href="https://medicareappeal.com/part-b/copy-of-decision" label="Copy of Decision | Medicare Appeals" size="lg" underline="always"></mms-link> to submit a request. For additional information on this process click <mms-link href="https://medicareappeal.com/decision-letter-help" label="Decision Letter Help | Medicare Appeals." size="lg" underline="always"></mms-link></p>
         </mms-accordion-item>
         <mms-accordion-item header-text="Key Contacts">
           <p class="paragraph">If you have questions about your DME appeal, contact Maximus:</p>
           <ul class="list">
-            <li><strong>Email:</strong> <a class="link" href="mailto:DMEInfo@maximus.com">DMEInfo@maximus.com</a></li>
-            <li><strong>Phone (Suppliers):</strong> <a class="link" href="tel:585-348-3200">585-348-3200</a></li>
+            <li><strong>Email:</strong> <mms-link href="mailto:DMEInfo@maximus.com" label="DMEInfo@maximus.com" size="lg" underline="always"></mms-link></li>
+            <li><strong>Phone (Suppliers):</strong> <mms-link href="tel:585-348-3200" label="585-348-3200" size="lg" underline="always"></mms-link></li>
             <li><strong>Fax:</strong> 585-869-3314</li>
           </ul>
-          <p class="paragraph"><strong>Medicare beneficiaries</strong> may also contact Medicare directly at <a class="link" href="tel:1-800-633-4227">1-800-MEDICARE (1-800-633-4227)</a>.</p>
+          <p class="paragraph"><strong>Medicare beneficiaries</strong> may also contact Medicare directly at <mms-link href="tel:1-800-633-4227" label="1-800-MEDICARE (1-800-633-4227)" size="lg" underline="always"></mms-link>.</p>
           <p class="paragraph"><strong>Important:</strong> Email is not a secure method of communication and may be vulnerable to interception. If your inquiry contains personal, medical, or other sensitive information, please submit it by mail or fax instead.</p>
-          <p class="paragraph">For information about the availability of auxiliary aids and services, visit the <a class="link" href="https://www.medicare.gov/about-us/nondiscrimination/nondiscrimination-notice.html" target="_blank" rel="noopener noreferrer">Medicare Nondiscrimination Notice<span class="sr-only"> (opens in new tab)</span></a>.</p>
+          <p class="paragraph">For information about the availability of auxiliary aids and services, visit the <mms-link href="https://www.medicare.gov/about-us/nondiscrimination/nondiscrimination-notice.html" label="Medicare Nondiscrimination Notice" size="lg" underline="always" target="_blank" aria-label="Medicare Nondiscrimination Notice (opens in new tab)"></mms-link>.</p>
           <p class="paragraph paragraph--label">Accessibility &amp; Nondiscrimination Notice</p>
           <p class="paragraph">Medicare provides free auxiliary aids and services including information in braille, large print, data and audio files, relay services and TTY communications.</p>
         </mms-accordion-item>

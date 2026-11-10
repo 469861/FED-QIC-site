@@ -108,20 +108,13 @@ img { max-width: 100%; }
 .hero__image img { height: clamp(120px, 22vw, 300px); width: auto; max-width: 45vw; object-fit: contain; display: block; }
 
 /* ---------- Breadcrumb ---------- */
-.breadcrumb { color: var(--purple); padding: 20px 0; }
-.breadcrumb__list { margin: 0; padding: 0; list-style: none; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
-.breadcrumb__item { color: var(--purple); font-size: 16px; }
-.breadcrumb__item:not(:last-child)::after { content: "/"; padding-left: 10px; }
-.breadcrumb__link { color: var(--purple); text-decoration: underline; font-weight: 700; }
-.breadcrumb__link:hover { text-decoration: none; }
+.breadcrumb { display: flex; justify-content: center; padding: 20px 24px; }
 
 /* ---------- Page content ---------- */
 .page { padding-top: 40px; padding-bottom: 40px; font-size: 24px; }
 .page-title { font-size: 36px; font-weight: 700; margin-bottom: .5em; line-height: 1.35; }
 .intro { font-size: 24px; line-height: 1.55; margin-bottom: 1em; }
 
-.link { color: var(--purple); font-size: inherit; font-weight: 700; text-decoration: underline; }
-.link:hover { text-decoration: none; }
 
 .paragraph { font-size: 24px; line-height: 1.55; margin-bottom: 1em; }
 .paragraph--label { font-weight: 700; }
@@ -240,7 +233,7 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
 
 /* Part A West accordion */
 .page-accordion { display: block; margin: 32px 0 0; }
-.page-accordion .paragraph, .page-accordion .list li, .page-accordion .sub-heading, .page-accordion .link { font-size: 18px; }
+.page-accordion .paragraph, .page-accordion .list li, .page-accordion .sub-heading { font-size: 18px; }
 .page-accordion .paragraph:last-child, .page-accordion .list:last-child { margin-bottom: 0; }
 
 .online-request-hero { display: block; margin: 24px 0 40px; --text-measure-prose: none; }
@@ -16555,13 +16548,9 @@ lit-html/directives/if-defined.js:
       </div>
     </section>
 
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <ol class="breadcrumb__list">
-        <li class="breadcrumb__item"><a class="breadcrumb__link" href="index.html">Home</a></li>
-        <li class="breadcrumb__item"><a class="breadcrumb__link" href="part-a-west.html">Part A West</a></li>
-        <li class="breadcrumb__item" aria-current="page">Expedited Appeal Request Form</li>
-      </ol>
-    </nav>
+    <div class="breadcrumb">
+      <mms-breadcrumbs items='[{"label": "Home", "href": "index.html"}, {"label": "Part A West", "href": "part-a-west.html"}, {"label": "Expedited Appeal Request Form"}]'></mms-breadcrumbs>
+    </div>
 
     <div class="container page">
       <!--
