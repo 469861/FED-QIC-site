@@ -474,9 +474,9 @@ async function appendOptionalAfterTooltip(field) {
   row.append(suffix);
   const sheet = new CSSStyleSheet();
   sheet.replaceSync(`.label-row { display: block; }
-    .label-row > * { display: inline-block; vertical-align: middle; }
+    .label-row > * { display: inline-block; vertical-align: top; }
     .label-row > :first-child { display: inline; }
-    .label-row > mms-tooltip { margin: 0 var(--spacing-xs2, 4px); }`);
+    .label-row > mms-tooltip { margin: 0 var(--spacing-xs2, 4px); display: inline-flex; align-items: center; height: 1lh; vertical-align: top; overflow: visible; }`);
   field.shadowRoot.adoptedStyleSheets = [...field.shadowRoot.adoptedStyleSheets, sheet];
 }
 

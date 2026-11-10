@@ -323,6 +323,7 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
   gap: var(--layout-gap-default, var(--spacing-md2));
 }
 .sf-row--address { grid-template-columns: 2fr 2fr 1fr; }
+.sf-span-2 { grid-column: span 2; }
 
 .sf-actions {
   display: flex;
@@ -470,6 +471,7 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
   .sf-row,
   .sf-row--address,
   .sf-review__list { grid-template-columns: 1fr; }
+  .sf-span-2 { grid-column: auto; }
   .sf-review__list dd { margin-bottom: var(--spacing-sm2); }
   .sf-actions__nav { order: -1; width: 100%; justify-content: flex-end; }
 }
@@ -16584,11 +16586,9 @@ lit-html/directives/if-defined.js:
                 <mms-select data-field="state" label="State" placeholder="Select" required></mms-select>
                 <mms-text-field data-field="zip" label="ZIP Code" placeholder="Enter a 5-digit ZIP Code" autocomplete="postal-code" max-length="10" required></mms-text-field>
               </div>
-              <div class="sf-row">
+              <div class="sf-row sf-row--address">
                 <mms-text-field data-field="phone" label="Phone number" type="tel" mask="phone-number" autocomplete="tel" required></mms-text-field>
-              </div>
-              <div class="sf-row">
-                <mms-text-field data-field="qioRedeterminationNumber" label="Quality Improvement Organization (QIO) redetermination number (optional)" autocomplete="off" show-tooltip tooltip-text="This is the first level appeal number. You can find this number on the determination letter you received from the QIO."></mms-text-field>
+                <mms-text-field class="sf-span-2" data-field="qioRedeterminationNumber" label="Quality Improvement Organization (QIO) redetermination number (optional)" autocomplete="off" show-tooltip tooltip-text="This is the first level appeal number. You can find this number on the determination letter you received from the QIO."></mms-text-field>
               </div>
 
               <h3 class="sf-section-heading">Representative information</h3>
@@ -17183,9 +17183,9 @@ async function appendOptionalAfterTooltip(field) {
   row.append(suffix);
   const sheet = new CSSStyleSheet();
   sheet.replaceSync(`.label-row { display: block; }
-    .label-row > * { display: inline-block; vertical-align: middle; }
+    .label-row > * { display: inline-block; vertical-align: top; }
     .label-row > :first-child { display: inline; }
-    .label-row > mms-tooltip { margin: 0 var(--spacing-xs2, 4px); }`);
+    .label-row > mms-tooltip { margin: 0 var(--spacing-xs2, 4px); display: inline-flex; align-items: center; height: 1lh; vertical-align: top; overflow: visible; }`);
   field.shadowRoot.adoptedStyleSheets = [...field.shadowRoot.adoptedStyleSheets, sheet];
 }
 

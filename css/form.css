@@ -73,6 +73,7 @@
   gap: var(--layout-gap-default, var(--spacing-md2));
 }
 .sf-row--address { grid-template-columns: 2fr 2fr 1fr; }
+.sf-span-2 { grid-column: span 2; }
 
 .sf-actions {
   display: flex;
@@ -220,6 +221,7 @@
   .sf-row,
   .sf-row--address,
   .sf-review__list { grid-template-columns: 1fr; }
+  .sf-span-2 { grid-column: auto; }
   .sf-review__list dd { margin-bottom: var(--spacing-sm2); }
   .sf-actions__nav { order: -1; width: 100%; justify-content: flex-end; }
 }
