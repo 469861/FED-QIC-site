@@ -239,3 +239,7 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
 
 /* Cap page body at the design system content width, matching the footer */
 .page--content { max-width: var(--layout-content-max-width, 1280px); }
+.list--ordered { list-style: decimal; padding-left: 1.5em; }
+.list--ordered li::before { content: none; }
+.list--ordered li::marker { color: var(--purple); font-weight: 700; }
+.submit-method { margin: 12px 0 0; }
