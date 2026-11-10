@@ -16645,11 +16645,18 @@ lit-html/directives/if-defined.js:
               </div>
             </mms-card>
             <div class="sf-fields sf-upload-followup">
-              <mms-radio-group data-field="supportingDocsLater" label="Do you have supporting documents that you are unable to upload today?" orientation="horizontal" required>
+              <mms-radio-group data-field="supportingDocsLater" label="Do you have any supporting documentation you are unable to upload today?" orientation="horizontal" required>
                 <mms-radio value="yes" label="Yes"></mms-radio>
                 <mms-radio value="no" label="No"></mms-radio>
               </mms-radio-group>
-              <mms-inline-alert data-show-when="supportingDocsLater=yes" alert-type="informational" summary="We can hold processing your appeal for up to 14 days after you submit, allowing you time to fax supporting documents." message="Fax them to 585-869-3346 or 585-869-3365." hidden></mms-inline-alert>
+              <div class="sf-fields" data-show-when="supportingDocsLater=yes" hidden>
+                <mms-radio-group data-field="waitForDocs" label="Do you want us to wait up to 14 days for your supporting documentation before making a decision?" orientation="horizontal" required>
+                  <mms-radio value="yes" label="Yes"></mms-radio>
+                  <mms-radio value="no" label="No"></mms-radio>
+                </mms-radio-group>
+                <mms-inline-alert data-show-when="waitForDocs=yes" alert-type="informational" message="We will not render a decision until we receive your additional documentation or 14 days have passed, whichever occurs first. You may fax your supporting documents to 585-348-3020." hidden></mms-inline-alert>
+                <mms-inline-alert data-show-when="waitForDocs=no" alert-type="caution" message="You have chosen not to request a 14-day extension. We may render a decision before we receive any additional documentation. If you would like your supporting documents considered before a decision is made, request the 14-day extension. Otherwise, you may submit a new application at a later date when your documents are available to upload." hidden></mms-inline-alert>
+              </div>
             </div>
           </section>
 
@@ -16676,7 +16683,7 @@ lit-html/directives/if-defined.js:
             <p>Your request was received on <strong><time id="sf-confirmation-submitted"></time></strong>.</p>
             <p>Your temporary ID is <strong id="sf-confirmation-number"></strong>. You can reference this if you need to contact us before you receive your Acknowledgment Letter.</p>
             <p>Please note that you are not required to submit a paper copy of this Case File. Doing so could delay processing of the appeal.</p>
-            <mms-inline-alert id="sf-confirmation-deadline" alert-type="informational" summary="We can hold processing your appeal for up to 14 days after you submit, allowing you time to fax supporting documents." message="Fax them to 585-869-3346 or 585-869-3365." hidden></mms-inline-alert>
+            <mms-inline-alert id="sf-confirmation-deadline" alert-type="informational" message="We will not render a decision until we receive your additional documentation or 14 days have passed, whichever occurs first. You may fax your supporting documents to 585-348-3020." hidden></mms-inline-alert>
           </div>
           <div class="sf-actions">
             <mms-button id="sf-print" variant="secondary" label="Print this page" left-icon="printer"></mms-button>
@@ -16994,7 +17001,8 @@ function reviewSections() {
     {
       step: 1, title: 'Upload documents',
       rows: [
-        ['Do you have supporting documents that you are unable to upload today?', getValue('supportingDocsLater') === 'yes' ? 'Yes' : 'No'],
+        ['Do you have any supporting documentation you are unable to upload today?', getValue('supportingDocsLater') === 'yes' ? 'Yes' : 'No'],
+        getValue('supportingDocsLater') === 'yes' && ['Do you want us to wait up to 14 days for your supporting documentation before making a decision?', getValue('waitForDocs') === 'yes' ? 'Yes' : 'No'],
         ['Selected documents', uploadedFiles.map((file) => file.name).join('\n')],
       ],
     },
@@ -17115,7 +17123,7 @@ function submit() {
     return;
   }
   const d = new Date();
-  document.getElementById('sf-confirmation-deadline').hidden = getValue('supportingDocsLater') !== 'yes';
+  document.getElementById('sf-confirmation-deadline').hidden = !(getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes');
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   document.getElementById('sf-confirmation-number').textContent = number;
   const mbi = getValue('mbi').replace(/[^A-Za-z0-9]/g, '');

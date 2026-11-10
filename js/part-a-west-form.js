@@ -285,7 +285,8 @@ function reviewSections() {
     {
       step: 1, title: 'Upload documents',
       rows: [
-        ['Do you have supporting documents that you are unable to upload today?', getValue('supportingDocsLater') === 'yes' ? 'Yes' : 'No'],
+        ['Do you have any supporting documentation you are unable to upload today?', getValue('supportingDocsLater') === 'yes' ? 'Yes' : 'No'],
+        getValue('supportingDocsLater') === 'yes' && ['Do you want us to wait up to 14 days for your supporting documentation before making a decision?', getValue('waitForDocs') === 'yes' ? 'Yes' : 'No'],
         ['Selected documents', uploadedFiles.map((file) => file.name).join('\n')],
       ],
     },
@@ -406,7 +407,7 @@ function submit() {
     return;
   }
   const d = new Date();
-  document.getElementById('sf-confirmation-deadline').hidden = getValue('supportingDocsLater') !== 'yes';
+  document.getElementById('sf-confirmation-deadline').hidden = !(getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes');
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   document.getElementById('sf-confirmation-number').textContent = number;
   const mbi = getValue('mbi').replace(/[^A-Za-z0-9]/g, '');
