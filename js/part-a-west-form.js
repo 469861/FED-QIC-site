@@ -407,9 +407,14 @@ function submit() {
     return;
   }
   const d = new Date();
-  document.getElementById('sf-confirmation-deadline').hidden = !(getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes');
+  const extension = getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes';
+  document.getElementById('sf-confirmation-deadline').hidden = !extension;
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
-  document.getElementById('sf-confirmation-id').setAttribute('summary', `Your temporary ID is ${number}.`);
+  const idAlert = document.getElementById('sf-confirmation-id');
+  idAlert.setAttribute('summary', `Your temporary ID is ${number}${extension ? ',' : '.'}`);
+  idAlert.setAttribute('message', extension
+    ? 'make sure to include this number when faxing in supporting documentation.'
+    : 'Please allow us 72 hours to process your appeal.');
   const mbi = getValue('mbi').replace(/[^A-Za-z0-9]/g, '');
   const lastFour = mbi.slice(-4);
   const first = getValue('firstName');
