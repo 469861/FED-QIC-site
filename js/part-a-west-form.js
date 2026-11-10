@@ -457,12 +457,16 @@ async function italicizeTooltipPhrase(field, phrase) {
   }
 }
 
-// mms-text-field renders the tooltip icon after the whole label, so append "(optional)" after the icon instead.
+// mms-text-field renders the tooltip icon after the whole label, so move "(optional)" after the icon.
 async function appendOptionalAfterTooltip(field) {
+  const suffixText = ' (optional)';
+  if (!field.label.endsWith(suffixText)) return;
+  const fullLabel = field.label;
+  field.label = fullLabel.slice(0, -suffixText.length);
   await field.updateComplete;
   const row = field.shadowRoot?.querySelector('.label-row');
   if (!row || row.querySelector('.optional-suffix')) return;
-  field.setAttribute('aria-label', `${field.label} (optional)`);
+  field.setAttribute('aria-label', fullLabel);
   const suffix = document.createElement('span');
   suffix.className = 'optional-suffix';
   suffix.setAttribute('aria-hidden', 'true');
