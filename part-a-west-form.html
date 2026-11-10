@@ -461,6 +461,7 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
 
 /* Confirmation */
 .sf-confirmation > * + * { margin-top: var(--spacing-lg1); }
+.sf-confirmation__message > mms-inline-alert { display: block; margin-bottom: var(--spacing-lg1); }
 .sf-confirmation__message p {
   margin: 0 0 var(--spacing-md2, 16px);
   font-size: var(--text-body-md-size);
@@ -16679,9 +16680,9 @@ lit-html/directives/if-defined.js:
         <section class="sf-confirmation" id="sf-confirmation" hidden aria-labelledby="sf-confirmation-heading">
           <h2 class="sf-heading" id="sf-confirmation-heading" tabindex="-1">Request submitted</h2>
           <div class="sf-confirmation__message">
+            <mms-inline-alert id="sf-confirmation-id" alert-type="success" message="Please allow us 72 hours to process your appeal."></mms-inline-alert>
             <p>Thank you for submitting your appeal for the services provided to <strong id="sf-confirmation-beneficiary"></strong>.</p>
             <p>Your request was received on <strong><time id="sf-confirmation-submitted"></time></strong>.</p>
-            <p>Your temporary ID is <strong id="sf-confirmation-number"></strong>. You can reference this if you need to contact us before you receive your Acknowledgment Letter.</p>
             <p>Please note that you are not required to submit a paper copy of this Case File. Doing so could delay processing of the appeal.</p>
             <mms-inline-alert id="sf-confirmation-deadline" alert-type="informational" message="We will not render a decision until we receive your additional documentation or 14 days have passed, whichever occurs first. You may fax your supporting documents to 585-348-3020." hidden></mms-inline-alert>
           </div>
@@ -17125,7 +17126,7 @@ function submit() {
   const d = new Date();
   document.getElementById('sf-confirmation-deadline').hidden = !(getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes');
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
-  document.getElementById('sf-confirmation-number').textContent = number;
+  document.getElementById('sf-confirmation-id').setAttribute('summary', `Your temporary ID is ${number}.`);
   const mbi = getValue('mbi').replace(/[^A-Za-z0-9]/g, '');
   const lastFour = mbi.slice(-4);
   const first = getValue('firstName');

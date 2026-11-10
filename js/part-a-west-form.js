@@ -409,7 +409,7 @@ function submit() {
   const d = new Date();
   document.getElementById('sf-confirmation-deadline').hidden = !(getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes');
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
-  document.getElementById('sf-confirmation-number').textContent = number;
+  document.getElementById('sf-confirmation-id').setAttribute('summary', `Your temporary ID is ${number}.`);
   const mbi = getValue('mbi').replace(/[^A-Za-z0-9]/g, '');
   const lastFour = mbi.slice(-4);
   const first = getValue('firstName');

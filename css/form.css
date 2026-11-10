@@ -211,6 +211,7 @@
 
 /* Confirmation */
 .sf-confirmation > * + * { margin-top: var(--spacing-lg1); }
+.sf-confirmation__message > mms-inline-alert { display: block; margin-bottom: var(--spacing-lg1); }
 .sf-confirmation__message p {
   margin: 0 0 var(--spacing-md2, 16px);
   font-size: var(--text-body-md-size);
