@@ -335,6 +335,7 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
 .sf-row--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .sf-row--address { grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr); }
 .sf-span-2 { grid-column: span 2; }
+.sf-field--short { max-width: 12rem; }
 
 .sf-actions {
   display: flex;
@@ -16673,7 +16674,7 @@ lit-html/directives/if-defined.js:
                 </mms-radio-group>
                 <div class="sf-fields" data-show-when="waitForDocs=yes" hidden>
                   <mms-inline-alert alert-type="informational" message="We can hold processing your appeal for up to 14 days after you submit, allowing you time to fax supporting documents. Fax to 585-869-3346 or 585-869-3365."></mms-inline-alert>
-                  <mms-text-field data-field="additionalDays" label="How many additional days do you need?" type="number" min="1" max="14" step="1" helper-text="Enter a number from 1 to 14." required></mms-text-field>
+                  <mms-text-field class="sf-field--short" data-field="additionalDays" label="How many additional days do you need?" type="number" min="1" max="14" step="1" helper-text="Enter a number from 1 to 14." required></mms-text-field>
                 </div>
                 <mms-inline-alert data-show-when="waitForDocs=no" alert-type="caution" message="You have chosen not to request a 14-day extension. We may render a decision before we receive any additional documentation. If you would like your supporting documents considered before a decision is made, request the 14-day extension. Otherwise, you may submit a new application at a later date when your documents are available to upload." hidden></mms-inline-alert>
               </div>
