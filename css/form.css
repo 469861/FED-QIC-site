@@ -61,10 +61,16 @@
 .sf-section-heading {
   margin: var(--spacing-md2) 0 0;
   font-family: var(--font-family-heading);
-  font-size: var(--text-heading-4-size);
-  line-height: var(--text-heading-4-line-height);
+  font-size: var(--text-heading-3-size);
+  line-height: var(--text-heading-3-line-height);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-default);
+}
+
+.sf-section-copy {
+  margin: 0;
+  font-size: var(--text-body-md-size);
+  line-height: var(--text-body-md-line-height);
 }
 
 .sf-row {
