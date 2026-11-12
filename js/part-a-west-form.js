@@ -501,6 +501,14 @@ async function appendOptionalAfterTooltip(field) {
   field.shadowRoot.adoptedStyleSheets = [...field.shadowRoot.adoptedStyleSheets, sheet];
 }
 
+function keepRequiredIndicatorAfterLabel(field) {
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(`.label-row { display: block; }
+    .label-row > :first-child { display: inline; }
+    .required-indicator { display: inline; }`);
+  field.shadowRoot.adoptedStyleSheets = [...field.shadowRoot.adoptedStyleSheets, sheet];
+}
+
 async function init() {
   await Promise.all(['mms-stepper', 'mms-select', 'mms-radio-group', 'mms-radio', 'mms-inline-alert', 'mms-button', 'mms-modal']
     .map((tag) => customElements.whenDefined(tag)));
@@ -510,6 +518,7 @@ async function init() {
   fieldEl('state').options = stateOptions;
   fieldEl('providerState').options = stateOptions;
   initUploader();
+  keepRequiredIndicatorAfterLabel(fieldEl('additionalDays'));
   italicizeTooltipPhrase(fieldEl('mbi'), 'my Social Security');
   appendOptionalAfterTooltip(fieldEl('qioRedeterminationNumber'));
 
