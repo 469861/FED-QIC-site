@@ -73,6 +73,10 @@
   line-height: var(--text-body-md-line-height);
 }
 
+.sf-section-heading + .sf-section-copy {
+  margin-top: calc(-1 * var(--spacing-md1));
+}
+
 .sf-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
