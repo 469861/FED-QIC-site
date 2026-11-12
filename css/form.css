@@ -85,7 +85,7 @@
 .sf-row--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .sf-row--address { grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr); }
 .sf-span-2 { grid-column: span 2; }
-.sf-field--short { max-width: 12rem; }
+.sf-field--half { width: 50%; max-width: 50%; }
 
 .sf-actions {
   display: flex;

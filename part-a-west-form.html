@@ -335,7 +335,7 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
 .sf-row--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .sf-row--address { grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr); }
 .sf-span-2 { grid-column: span 2; }
-.sf-field--short { max-width: 12rem; }
+.sf-field--half { width: 50%; max-width: 50%; }
 
 .sf-actions {
   display: flex;
@@ -16668,15 +16668,8 @@ lit-html/directives/if-defined.js:
                 <mms-radio value="no" label="No"></mms-radio>
               </mms-radio-group>
               <div class="sf-fields" data-show-when="supportingDocsLater=yes" hidden>
-                <mms-radio-group data-field="waitForDocs" label="Do you want us to wait up to 14 days for your supporting documentation before making a decision?" orientation="horizontal" required>
-                  <mms-radio value="yes" label="Yes"></mms-radio>
-                  <mms-radio value="no" label="No"></mms-radio>
-                </mms-radio-group>
-                <div class="sf-fields" data-show-when="waitForDocs=yes" hidden>
-                  <mms-inline-alert alert-type="informational" message="We can hold processing your appeal for up to 14 days after you submit, allowing you time to fax supporting documents. Fax to 585-869-3346 or 585-869-3365."></mms-inline-alert>
-                  <mms-text-field class="sf-field--short" data-field="additionalDays" label="How many additional days do you need?" type="number" min="1" max="14" step="1" helper-text="Enter a number from 1 to 14." required></mms-text-field>
-                </div>
-                <mms-inline-alert data-show-when="waitForDocs=no" alert-type="caution" message="You have chosen not to request a 14-day extension. We may render a decision before we receive any additional documentation. If you would like your supporting documents considered before a decision is made, request the 14-day extension. Otherwise, you may submit a new application at a later date when your documents are available to upload." hidden></mms-inline-alert>
+                <mms-inline-alert alert-type="informational" message="We can hold processing your appeal for up to 14 days after you submit, allowing you time to fax supporting documents. Fax to 585-869-3346 or 585-869-3365."></mms-inline-alert>
+                <mms-text-field class="sf-field--half" data-field="additionalDays" label="How many additional days do you need?" type="number" min="1" max="14" step="1" helper-text="Enter a number from 1 to 14." required></mms-text-field>
               </div>
             </div>
           </section>
@@ -17036,9 +17029,7 @@ function reviewSections() {
       step: 1, title: 'Upload documents',
       rows: [
         ['Do you have any supporting documentation you are unable to upload today?', getValue('supportingDocsLater') === 'yes' ? 'Yes' : 'No'],
-        getValue('supportingDocsLater') === 'yes' && ['Do you want us to wait up to 14 days for your supporting documentation before making a decision?', getValue('waitForDocs') === 'yes' ? 'Yes' : 'No'],
-        getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes'
-          && ['Additional days requested', getValue('additionalDays')],
+        getValue('supportingDocsLater') === 'yes' && ['Additional days requested', getValue('additionalDays')],
         ['Selected documents', uploadedFiles.map((file) => file.name).join('\n')],
       ],
     },
@@ -17159,7 +17150,7 @@ function submit() {
     return;
   }
   const d = new Date();
-  const extension = getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes';
+  const extension = getValue('supportingDocsLater') === 'yes';
   document.getElementById('sf-confirmation-deadline').hidden = !extension;
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   const idAlert = document.getElementById('sf-confirmation-id');

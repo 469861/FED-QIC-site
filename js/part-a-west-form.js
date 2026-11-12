@@ -299,9 +299,7 @@ function reviewSections() {
       step: 1, title: 'Upload documents',
       rows: [
         ['Do you have any supporting documentation you are unable to upload today?', getValue('supportingDocsLater') === 'yes' ? 'Yes' : 'No'],
-        getValue('supportingDocsLater') === 'yes' && ['Do you want us to wait up to 14 days for your supporting documentation before making a decision?', getValue('waitForDocs') === 'yes' ? 'Yes' : 'No'],
-        getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes'
-          && ['Additional days requested', getValue('additionalDays')],
+        getValue('supportingDocsLater') === 'yes' && ['Additional days requested', getValue('additionalDays')],
         ['Selected documents', uploadedFiles.map((file) => file.name).join('\n')],
       ],
     },
@@ -422,7 +420,7 @@ function submit() {
     return;
   }
   const d = new Date();
-  const extension = getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes';
+  const extension = getValue('supportingDocsLater') === 'yes';
   document.getElementById('sf-confirmation-deadline').hidden = !extension;
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   const idAlert = document.getElementById('sf-confirmation-id');
