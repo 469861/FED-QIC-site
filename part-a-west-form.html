@@ -16628,12 +16628,18 @@ lit-html/directives/if-defined.js:
                 <mms-text-field data-field="providerCity" label="City" autocomplete="off" required></mms-text-field>
                 <mms-select data-field="providerState" label="State" placeholder="Select" required></mms-select>
               </div>
-              <div class="sf-row">
-                <mms-text-field data-field="providerContactFirstName" label="Contact first name (optional)" autocomplete="off"></mms-text-field>
-                <mms-text-field data-field="providerContactLastName" label="Contact last name (optional)" autocomplete="off"></mms-text-field>
-              </div>
-              <div class="sf-row">
-                <mms-text-field data-field="providerPhone" label="Contact phone number" type="tel" mask="phone-number" autocomplete="off" required></mms-text-field>
+              <mms-radio-group data-field="hasFacilityContact" label="Have you been working with a social worker or someone else at the facility?" orientation="horizontal" required>
+                <mms-radio value="yes" label="Yes"></mms-radio>
+                <mms-radio value="no" label="No"></mms-radio>
+              </mms-radio-group>
+              <div class="sf-fields" data-show-when="hasFacilityContact=yes" hidden>
+                <div class="sf-row">
+                  <mms-text-field data-field="providerContactFirstName" label="Contact first name" autocomplete="off" required></mms-text-field>
+                  <mms-text-field data-field="providerContactLastName" label="Contact last name" autocomplete="off" required></mms-text-field>
+                </div>
+                <div class="sf-row">
+                  <mms-text-field data-field="providerPhone" label="Contact phone number" type="tel" mask="phone-number" autocomplete="off" required></mms-text-field>
+                </div>
               </div>
             </div>
           </section>
@@ -17013,8 +17019,9 @@ function reviewSections() {
       rows: [
         ['Facility name', getValue('providerOrg')],
         ['City and state', [getValue('providerCity'), getValue('providerState')].filter(Boolean).join(', ')],
-        ['Contact name', [getValue('providerContactFirstName'), getValue('providerContactLastName')].filter(Boolean).join(' ')],
-        ['Contact phone number', getValue('providerPhone')],
+        ['Have you been working with a social worker or someone else at the facility?', getValue('hasFacilityContact') === 'yes' ? 'Yes' : 'No'],
+        getValue('hasFacilityContact') === 'yes' && ['Contact name', [getValue('providerContactFirstName'), getValue('providerContactLastName')].filter(Boolean).join(' ')],
+        getValue('hasFacilityContact') === 'yes' && ['Contact phone number', getValue('providerPhone')],
       ],
     },
     {

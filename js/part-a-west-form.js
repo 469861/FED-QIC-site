@@ -284,8 +284,9 @@ function reviewSections() {
       rows: [
         ['Facility name', getValue('providerOrg')],
         ['City and state', [getValue('providerCity'), getValue('providerState')].filter(Boolean).join(', ')],
-        ['Contact name', [getValue('providerContactFirstName'), getValue('providerContactLastName')].filter(Boolean).join(' ')],
-        ['Contact phone number', getValue('providerPhone')],
+        ['Have you been working with a social worker or someone else at the facility?', getValue('hasFacilityContact') === 'yes' ? 'Yes' : 'No'],
+        getValue('hasFacilityContact') === 'yes' && ['Contact name', [getValue('providerContactFirstName'), getValue('providerContactLastName')].filter(Boolean).join(' ')],
+        getValue('hasFacilityContact') === 'yes' && ['Contact phone number', getValue('providerPhone')],
       ],
     },
     {
