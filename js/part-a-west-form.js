@@ -118,6 +118,10 @@ function validateField(el) {
   if (!value) return '';
 
   switch (name) {
+    case 'confirmMbi':
+      return normalizeMedicareNumber(value) === normalizeMedicareNumber(getValue('mbi'))
+        ? ''
+        : 'Medicare Numbers do not match';
     case 'phone':
     case 'callerPhone':
     case 'providerPhone':
@@ -128,6 +132,10 @@ function validateField(el) {
     default:
       return '';
   }
+}
+
+function normalizeMedicareNumber(value) {
+  return value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
 }
 
 function validateStep(index) {

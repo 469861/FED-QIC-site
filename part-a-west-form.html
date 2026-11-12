@@ -16582,7 +16582,10 @@ lit-html/directives/if-defined.js:
             <div class="sf-fields">
               <h3 class="sf-section-heading">Beneficiary</h3>
               <p class="sf-section-copy">Please provide the patient's information in this section. If you are completing the form for someone else, enter the patient's information rather than your own.</p>
-              <mms-text-field data-field="mbi" label="Medicare Number" required show-tooltip tooltip-text="Your Medicare Number is printed on the front of your red, white, and blue Medicare card. If you don&#39;t have the card, you can get your Medicare Number by logging in to your my Social Security account."></mms-text-field>
+              <div class="sf-row">
+                <mms-text-field data-field="mbi" label="Medicare Number" required show-tooltip tooltip-text="Your Medicare Number is printed on the front of your red, white, and blue Medicare card. If you don&#39;t have the card, you can get your Medicare Number by logging in to your my Social Security account."></mms-text-field>
+                <mms-text-field data-field="confirmMbi" label="Confirm Medicare Number" required autocomplete="off"></mms-text-field>
+              </div>
               <div class="sf-row">
                 <mms-text-field data-field="firstName" label="First name" autocomplete="given-name" required></mms-text-field>
                 <mms-text-field data-field="lastName" label="Last name" autocomplete="family-name" required></mms-text-field>
@@ -16842,6 +16845,10 @@ function validateField(el) {
   if (!value) return '';
 
   switch (name) {
+    case 'confirmMbi':
+      return normalizeMedicareNumber(value) === normalizeMedicareNumber(getValue('mbi'))
+        ? ''
+        : 'Medicare Numbers do not match';
     case 'phone':
     case 'callerPhone':
     case 'providerPhone':
@@ -16852,6 +16859,10 @@ function validateField(el) {
     default:
       return '';
   }
+}
+
+function normalizeMedicareNumber(value) {
+  return value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
 }
 
 function validateStep(index) {
