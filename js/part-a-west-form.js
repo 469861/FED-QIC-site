@@ -126,6 +126,12 @@ function validateField(el) {
       if (normalizeMedicareNumber(value).length !== 11) return 'Medicare number must be 11 characters';
       return normalizeMedicareNumber(value) === normalizeMedicareNumber(getValue('mbi'))
         ? '' : 'Medicare Numbers do not match';
+    case 'additionalDays': {
+      const days = Number(value);
+      return Number.isInteger(days) && days >= 1 && days <= 14
+        ? ''
+        : 'Enter a whole number from 1 to 14';
+    }
     case 'phone':
     case 'callerPhone':
     case 'providerPhone':
@@ -294,6 +300,8 @@ function reviewSections() {
       rows: [
         ['Do you have any supporting documentation you are unable to upload today?', getValue('supportingDocsLater') === 'yes' ? 'Yes' : 'No'],
         getValue('supportingDocsLater') === 'yes' && ['Do you want us to wait up to 14 days for your supporting documentation before making a decision?', getValue('waitForDocs') === 'yes' ? 'Yes' : 'No'],
+        getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes'
+          && ['Additional days requested', getValue('additionalDays')],
         ['Selected documents', uploadedFiles.map((file) => file.name).join('\n')],
       ],
     },

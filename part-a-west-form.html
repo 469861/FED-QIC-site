@@ -16671,7 +16671,10 @@ lit-html/directives/if-defined.js:
                   <mms-radio value="yes" label="Yes"></mms-radio>
                   <mms-radio value="no" label="No"></mms-radio>
                 </mms-radio-group>
-                <mms-inline-alert data-show-when="waitForDocs=yes" alert-type="informational" message="We will not render a decision until we receive your additional documentation or 14 days have passed, whichever occurs first. You may fax your supporting documents to 585-348-3020." hidden></mms-inline-alert>
+                <div class="sf-fields" data-show-when="waitForDocs=yes" hidden>
+                  <mms-inline-alert alert-type="informational" message="We can hold processing your appeal for up to 14 days after you submit, allowing you time to fax supporting documents. Fax to 585-869-3346 or 585-869-3365."></mms-inline-alert>
+                  <mms-text-field data-field="additionalDays" label="How many additional days do you need?" type="number" min="1" max="14" step="1" helper-text="Enter a number from 1 to 14." required></mms-text-field>
+                </div>
                 <mms-inline-alert data-show-when="waitForDocs=no" alert-type="caution" message="You have chosen not to request a 14-day extension. We may render a decision before we receive any additional documentation. If you would like your supporting documents considered before a decision is made, request the 14-day extension. Otherwise, you may submit a new application at a later date when your documents are available to upload." hidden></mms-inline-alert>
               </div>
             </div>
@@ -16859,6 +16862,12 @@ function validateField(el) {
       if (normalizeMedicareNumber(value).length !== 11) return 'Medicare number must be 11 characters';
       return normalizeMedicareNumber(value) === normalizeMedicareNumber(getValue('mbi'))
         ? '' : 'Medicare Numbers do not match';
+    case 'additionalDays': {
+      const days = Number(value);
+      return Number.isInteger(days) && days >= 1 && days <= 14
+        ? ''
+        : 'Enter a whole number from 1 to 14';
+    }
     case 'phone':
     case 'callerPhone':
     case 'providerPhone':
@@ -17027,6 +17036,8 @@ function reviewSections() {
       rows: [
         ['Do you have any supporting documentation you are unable to upload today?', getValue('supportingDocsLater') === 'yes' ? 'Yes' : 'No'],
         getValue('supportingDocsLater') === 'yes' && ['Do you want us to wait up to 14 days for your supporting documentation before making a decision?', getValue('waitForDocs') === 'yes' ? 'Yes' : 'No'],
+        getValue('supportingDocsLater') === 'yes' && getValue('waitForDocs') === 'yes'
+          && ['Additional days requested', getValue('additionalDays')],
         ['Selected documents', uploadedFiles.map((file) => file.name).join('\n')],
       ],
     },
