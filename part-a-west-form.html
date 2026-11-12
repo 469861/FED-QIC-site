@@ -16624,12 +16624,9 @@ lit-html/directives/if-defined.js:
               <h3 class="sf-section-heading">Facility information</h3>
               <p class="sf-section-copy">Please provide information about the facility or location where the services that are being appealed were provided.</p>
               <mms-text-field data-field="providerOrg" label="Facility name" autocomplete="organization" required show-tooltip tooltip-text="This is the location you are receiving services that are being denied."></mms-text-field>
-              <mms-text-field data-field="providerAddress1" label="Address (optional)" autocomplete="off"></mms-text-field>
-              <mms-text-field data-field="providerAddress2" label="Address line 2 (optional)" helper-text="Suite, building, floor, etc." autocomplete="off"></mms-text-field>
-              <div class="sf-row sf-row--address">
+              <div class="sf-row">
                 <mms-text-field data-field="providerCity" label="City" autocomplete="off" required></mms-text-field>
                 <mms-select data-field="providerState" label="State" placeholder="Select" required></mms-select>
-                <mms-text-field data-field="providerZip" label="ZIP Code (optional)" placeholder="Enter a 5-digit ZIP Code" autocomplete="off" max-length="10"></mms-text-field>
               </div>
               <div class="sf-row">
                 <mms-text-field data-field="providerContactFirstName" label="Contact first name (optional)" autocomplete="off"></mms-text-field>
@@ -16863,7 +16860,6 @@ function validateField(el) {
     case 'providerPhone':
       return value.replace(/\D/g, '').length === 10 ? '' : 'Enter a 10-digit phone number';
     case 'zip':
-    case 'providerZip':
       return /^\d{5}(-\d{4})?$/.test(value) ? '' : 'Enter a 5-digit ZIP Code, or ZIP+4';
     default:
       return '';
@@ -17016,12 +17012,7 @@ function reviewSections() {
       step: 0, title: 'Facility information',
       rows: [
         ['Facility name', getValue('providerOrg')],
-        ['Address', {
-          address: {
-            addressLine1: getValue('providerAddress1'), addressLine2: getValue('providerAddress2'),
-            city: getValue('providerCity'), state: getValue('providerState'), zipCode: getValue('providerZip'),
-          },
-        }],
+        ['City and state', [getValue('providerCity'), getValue('providerState')].filter(Boolean).join(', ')],
         ['Contact name', [getValue('providerContactFirstName'), getValue('providerContactLastName')].filter(Boolean).join(' ')],
         ['Contact phone number', getValue('providerPhone')],
       ],

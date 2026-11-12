@@ -131,7 +131,6 @@ function validateField(el) {
     case 'providerPhone':
       return value.replace(/\D/g, '').length === 10 ? '' : 'Enter a 10-digit phone number';
     case 'zip':
-    case 'providerZip':
       return /^\d{5}(-\d{4})?$/.test(value) ? '' : 'Enter a 5-digit ZIP Code, or ZIP+4';
     default:
       return '';
@@ -284,12 +283,7 @@ function reviewSections() {
       step: 0, title: 'Facility information',
       rows: [
         ['Facility name', getValue('providerOrg')],
-        ['Address', {
-          address: {
-            addressLine1: getValue('providerAddress1'), addressLine2: getValue('providerAddress2'),
-            city: getValue('providerCity'), state: getValue('providerState'), zipCode: getValue('providerZip'),
-          },
-        }],
+        ['City and state', [getValue('providerCity'), getValue('providerState')].filter(Boolean).join(', ')],
         ['Contact name', [getValue('providerContactFirstName'), getValue('providerContactLastName')].filter(Boolean).join(' ')],
         ['Contact phone number', getValue('providerPhone')],
       ],
