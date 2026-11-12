@@ -263,7 +263,7 @@ function reviewSections() {
   const hasRepresentative = getValue('hasRepresentative') === 'yes';
   return [
     {
-      step: 0, title: 'Beneficiary',
+      step: 0, title: 'Beneficiary information',
       rows: [
         ['Medicare Number', getValue('mbi')],
         ['Name', `${getValue('firstName')} ${getValue('lastName')}`],
