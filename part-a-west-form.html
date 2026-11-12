@@ -16677,6 +16677,7 @@ lit-html/directives/if-defined.js:
           <!-- Step 3: Review and submit -->
           <section class="sf-step" data-step="review" data-title="Review and submit" hidden>
             <p class="sf-lede">Check your answers before submitting. Select Edit to change a section. Fields marked with an asterisk (*) are required.</p>
+            <mms-text-field data-field="email" label="Email address" type="email" autocomplete="email" helper-text="Enter the email address where you want to receive updates on this request." required></mms-text-field>
             <div class="sf-review" id="sf-review"></div>
           </section>
 
@@ -16855,6 +16856,8 @@ function validateField(el) {
       if (normalizeMedicareNumber(value).length !== 11) return 'Medicare number must be 11 characters';
       return normalizeMedicareNumber(value) === normalizeMedicareNumber(getValue('mbi'))
         ? '' : 'Medicare Numbers do not match';
+    case 'email':
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'Enter a valid email address';
     case 'additionalDays': {
       const days = Number(value);
       return Number.isInteger(days) && days >= 1 && days <= 14

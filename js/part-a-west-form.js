@@ -126,6 +126,8 @@ function validateField(el) {
       if (normalizeMedicareNumber(value).length !== 11) return 'Medicare number must be 11 characters';
       return normalizeMedicareNumber(value) === normalizeMedicareNumber(getValue('mbi'))
         ? '' : 'Medicare Numbers do not match';
+    case 'email':
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? '' : 'Enter a valid email address';
     case 'additionalDays': {
       const days = Number(value);
       return Number.isInteger(days) && days >= 1 && days <= 14
