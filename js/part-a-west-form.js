@@ -118,10 +118,14 @@ function validateField(el) {
   if (!value) return '';
 
   switch (name) {
-    case 'confirmMbi':
-      return normalizeMedicareNumber(value) === normalizeMedicareNumber(getValue('mbi'))
+    case 'mbi':
+      return normalizeMedicareNumber(value).length === 11
         ? ''
-        : 'Medicare Numbers do not match';
+        : 'Medicare number must be 11 characters';
+    case 'confirmMbi':
+      if (normalizeMedicareNumber(value).length !== 11) return 'Medicare number must be 11 characters';
+      return normalizeMedicareNumber(value) === normalizeMedicareNumber(getValue('mbi'))
+        ? '' : 'Medicare Numbers do not match';
     case 'phone':
     case 'callerPhone':
     case 'providerPhone':
