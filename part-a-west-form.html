@@ -332,6 +332,7 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--layout-gap-default, var(--spacing-md2));
 }
+.sf-row--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .sf-row--address { grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr); }
 .sf-span-2 { grid-column: span 2; }
 
@@ -16633,11 +16634,9 @@ lit-html/directives/if-defined.js:
                 <mms-radio value="no" label="No"></mms-radio>
               </mms-radio-group>
               <div class="sf-fields" data-show-when="hasFacilityContact=yes" hidden>
-                <div class="sf-row">
+                <div class="sf-row sf-row--three">
                   <mms-text-field data-field="providerContactFirstName" label="Contact first name" autocomplete="off" required></mms-text-field>
                   <mms-text-field data-field="providerContactLastName" label="Contact last name" autocomplete="off" required></mms-text-field>
-                </div>
-                <div class="sf-row">
                   <mms-text-field data-field="providerPhone" label="Contact phone number" type="tel" mask="phone-number" autocomplete="off" required></mms-text-field>
                 </div>
               </div>
