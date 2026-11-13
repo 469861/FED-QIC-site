@@ -17156,10 +17156,8 @@ function submit() {
   document.getElementById('sf-confirmation-deadline').hidden = !extension;
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   const idAlert = document.getElementById('sf-confirmation-id');
-  idAlert.setAttribute('summary', `Your temporary ID is ${number}${extension ? ',' : '.'}`);
-  idAlert.setAttribute('message', extension
-    ? 'make sure to include this number when faxing in supporting documentation.'
-    : 'Please allow us 72 hours to process your appeal.');
+  idAlert.setAttribute('summary', `Your temporary ID is ${number},`);
+  idAlert.setAttribute('message', 'refer to this number should you need to contact us prior to receiving your decision. Include this number on your fax coversheet if sending in supporting documents.');
   const mbi = getValue('mbi').replace(/[^A-Za-z0-9]/g, '');
   const lastFour = mbi.slice(-4);
   const first = getValue('firstName');
