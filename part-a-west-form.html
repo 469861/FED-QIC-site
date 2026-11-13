@@ -16840,6 +16840,7 @@ function validateField(el) {
   const label = labelOf(el);
 
   if (el.hasAttribute('required') && !value) {
+    if (name === 'confirmMbi') return 'Confirm your Medicare number.';
     if (el.tagName === 'MMS-RADIO-GROUP') return `Select an answer for "${label}"`;
     if (el.tagName === 'MMS-SELECT') return `Select ${midSentence(label)}`;
     if (el.tagName === 'MMS-CHECKBOX') return 'You must check this box to submit your request';
