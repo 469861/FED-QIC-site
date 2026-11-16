@@ -297,6 +297,9 @@ mms-footer [slot="links"], mms-footer [slot="fine-print"] { display: flex; flex-
   line-height: var(--text-body-lg-line-height);
 }
 
+.sf-upload-lede p { margin: 0 0 var(--spacing-md2); }
+.sf-upload-lede p:last-child { margin-bottom: 0; }
+
 .sf-error-summary {
   display: block;
   margin-bottom: var(--spacing-lg1);
@@ -16646,7 +16649,11 @@ lit-html/directives/if-defined.js:
 
           <!-- Step 2: Upload documents -->
           <section class="sf-step" data-step="uploads" data-title="Upload documents" hidden>
-            <p class="sf-lede"><strong>Adding supporting documents is optional.</strong> If available, you can upload supporting documents now, such as medical records, personal statements, or Power of Attorney documentation for a representative. You may upload up to 10 documents.</p>
+            <div class="sf-lede sf-upload-lede">
+              <p><strong>Adding supporting documents is optional.</strong> The QIO that originally reviewed the request will submit documents to your case file.</p>
+              <p>You may submit more evidence for the appeal decision if you have it. You can upload up to 10 supporting documents now. These include medical records, personal statements, or Power of Attorney.</p>
+              <p>If you do not have the documents now, you may fax them within the next 14 days.</p>
+            </div>
             <mms-card class="sf-uploader" id="sf-uploader" title-text="Upload documents" show-description="false">
               <div class="sf-uploader__content" slot="body-content">
                 <input class="sf-uploader__input" id="sf-upload-input" type="file" accept=".pdf,application/pdf" multiple hidden />

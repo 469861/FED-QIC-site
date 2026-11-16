@@ -47,6 +47,9 @@
   line-height: var(--text-body-lg-line-height);
 }
 
+.sf-upload-lede p { margin: 0 0 var(--spacing-md2); }
+.sf-upload-lede p:last-child { margin-bottom: 0; }
+
 .sf-error-summary {
   display: block;
   margin-bottom: var(--spacing-lg1);
