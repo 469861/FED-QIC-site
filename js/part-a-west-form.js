@@ -424,7 +424,9 @@ function submit() {
   }
   const d = new Date();
   const extension = getValue('supportingDocsLater') === 'yes';
-  document.getElementById('sf-confirmation-deadline').hidden = !extension;
+  document.getElementById('sf-confirmation-processing').hidden = extension;
+  document.getElementById('sf-confirmation-extension').hidden = !extension;
+  document.getElementById('sf-confirmation-fax').hidden = !extension;
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   const idAlert = document.getElementById('sf-confirmation-id');
   idAlert.setAttribute('summary', `Your temporary ID is ${number}.`);
@@ -437,10 +439,10 @@ function submit() {
   const submittedEl = document.getElementById('sf-confirmation-submitted');
   submittedEl.dateTime = d.toISOString();
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
-    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
+    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
     timeZone: 'America/New_York', timeZoneName: 'short',
   }).formatToParts(d).map((p) => [p.type, p.value]));
-  submittedEl.textContent = `${parts.weekday} ${parts.month} ${parts.day}, ${parts.year} at ${parts.hour}:${parts.minute} ${parts.dayPeriod} ${parts.timeZoneName.replace(/^E[SD]T$/, 'ET')}`;
+  submittedEl.textContent = `${parts.weekday} ${parts.month} ${parts.day}, ${parts.year}, at ${parts.hour}:${parts.minute} ${parts.dayPeriod} ET`;
 
   furthest = steps.length;
   current = steps.length;

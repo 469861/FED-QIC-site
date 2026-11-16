@@ -16702,9 +16702,11 @@ lit-html/directives/if-defined.js:
           <h2 class="sf-heading" id="sf-confirmation-heading" tabindex="-1">Request submitted</h2>
           <div class="sf-confirmation__message">
             <mms-inline-alert id="sf-confirmation-id" alert-type="success" message="Please allow us 72 hours to process your appeal."></mms-inline-alert>
-            <mms-inline-alert id="sf-confirmation-deadline" alert-type="informational" message="Please allow us 72 hours to process your appeal. If you have indicated that you will need additional time to send in supporting documents, please allow us 72 hours from the date that you indicated you would provide your documentation." hidden></mms-inline-alert>
             <p>Thank you for submitting your appeal for the services provided to <strong id="sf-confirmation-beneficiary"></strong>.</p>
             <p>Your request was received on <strong><time id="sf-confirmation-submitted"></time></strong>.</p>
+            <p id="sf-confirmation-processing">We will process your appeal in <strong>3 days</strong>.</p>
+            <p id="sf-confirmation-extension" hidden>If you told us you need more time to send supporting documents, we will process your appeal <strong>3 days from the date you chose</strong> to provide your supporting documents.</p>
+            <p id="sf-confirmation-fax" hidden>Remember to fax your supporting documents by the date you chose to 585-869-3346 or 585-869-3365.</p>
           </div>
           <div class="sf-actions">
             <mms-link href="part-a-west.html" label="Return to Part A West" left-icon="arrow-left"></mms-link>
@@ -17161,7 +17163,9 @@ function submit() {
   }
   const d = new Date();
   const extension = getValue('supportingDocsLater') === 'yes';
-  document.getElementById('sf-confirmation-deadline').hidden = !extension;
+  document.getElementById('sf-confirmation-processing').hidden = extension;
+  document.getElementById('sf-confirmation-extension').hidden = !extension;
+  document.getElementById('sf-confirmation-fax').hidden = !extension;
   const number = `Q${String(d.getFullYear()).slice(-2)}-${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
   const idAlert = document.getElementById('sf-confirmation-id');
   idAlert.setAttribute('summary', `Your temporary ID is ${number}.`);
@@ -17174,10 +17178,10 @@ function submit() {
   const submittedEl = document.getElementById('sf-confirmation-submitted');
   submittedEl.dateTime = d.toISOString();
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
-    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
+    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
     timeZone: 'America/New_York', timeZoneName: 'short',
   }).formatToParts(d).map((p) => [p.type, p.value]));
-  submittedEl.textContent = `${parts.weekday} ${parts.month} ${parts.day}, ${parts.year} at ${parts.hour}:${parts.minute} ${parts.dayPeriod} ${parts.timeZoneName.replace(/^E[SD]T$/, 'ET')}`;
+  submittedEl.textContent = `${parts.weekday} ${parts.month} ${parts.day}, ${parts.year}, at ${parts.hour}:${parts.minute} ${parts.dayPeriod} ET`;
 
   furthest = steps.length;
   current = steps.length;
